@@ -1,0 +1,6 @@
+{
+  "name": "Pixevo Technologies",
+  "description": "Official website for Pixevo Technologies — Building modern software, web, mobile, AI, and cloud automation solutions for businesses worldwide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
