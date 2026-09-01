@@ -13,6 +13,8 @@ import {
   Linkedin,
   Instagram,
   Facebook,
+  Github,
+  MessageCircle,
   Shield,
   FileText,
   Sparkles,
@@ -108,7 +110,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenEstimator }) =
                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
                 <a
                   href={`mailto:${COMPANY_INFO.email}`}
-                  className="hover:text-blue-400 transition-colors"
+                  className="hover:text-blue-400 transition-colors truncate"
                 >
                   {COMPANY_INFO.email}
                 </a>
@@ -116,19 +118,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenEstimator }) =
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-blue-400 shrink-0" />
                 <a
-                  href={`tel:${COMPANY_INFO.phone}`}
-                  className="hover:text-blue-400 transition-colors"
+                  href={`tel:${COMPANY_INFO.phoneRaw}`}
+                  className="hover:text-blue-400 transition-colors font-medium text-slate-300"
                 >
                   {COMPANY_INFO.phone}
+                </a>
+                <a
+                  href={COMPANY_INFO.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                >
+                  <MessageCircle className="w-3 h-3" />
+                  <span>WhatsApp</span>
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
                 <span>{COMPANY_INFO.location}</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>{COMPANY_INFO.businessHours}</span>
+              <div className="flex items-start gap-2.5">
+                <Clock className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="block text-slate-300">{COMPANY_INFO.businessHours}</span>
+                  <span className="block text-[11px] text-slate-500">{COMPANY_INFO.businessDays}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -298,22 +312,36 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenEstimator }) =
               </li>
             </ul>
 
-            {/* Social Links Placeholders */}
+            {/* Social Links */}
             <div className="pt-3">
               <span className="text-xs font-semibold text-slate-300 block mb-2.5">
                 Connect With Us
               </span>
-              <div className="flex items-center gap-2.5">
+              <div className="flex flex-wrap items-center gap-2">
                 <a
-                  href="#linkedin-placeholder"
+                  href={COMPANY_INFO.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-blue-600 hover:text-white flex items-center justify-center text-slate-400 transition-all border border-slate-800"
-                  aria-label="Pixevo Technologies LinkedIn Profile"
+                  aria-label="Pixevo Technologies LinkedIn Company Page"
                   title="LinkedIn"
                 >
                   <Linkedin className="w-4 h-4" />
                 </a>
                 <a
-                  href="#instagram-placeholder"
+                  href={COMPANY_INFO.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-700 hover:text-white flex items-center justify-center text-slate-400 transition-all border border-slate-800"
+                  aria-label="Pixevo Technologies GitHub Repository"
+                  title="GitHub"
+                >
+                  <Github className="w-4 h-4" />
+                </a>
+                <a
+                  href={COMPANY_INFO.social.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-pink-600 hover:text-white flex items-center justify-center text-slate-400 transition-all border border-slate-800"
                   aria-label="Pixevo Technologies Instagram Profile"
                   title="Instagram"
@@ -321,12 +349,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenEstimator }) =
                   <Instagram className="w-4 h-4" />
                 </a>
                 <a
-                  href="#facebook-placeholder"
+                  href={COMPANY_INFO.social.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-blue-700 hover:text-white flex items-center justify-center text-slate-400 transition-all border border-slate-800"
-                  aria-label="Pixevo Technologies Facebook Profile"
+                  aria-label="Pixevo Technologies Facebook Page"
                   title="Facebook"
                 >
                   <Facebook className="w-4 h-4" />
+                </a>
+                <a
+                  href={COMPANY_INFO.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-emerald-600 hover:text-white flex items-center justify-center text-slate-400 transition-all border border-slate-800"
+                  aria-label="Chat with Pixevo Technologies on WhatsApp"
+                  title="WhatsApp"
+                >
+                  <MessageCircle className="w-4 h-4" />
                 </a>
               </div>
             </div>

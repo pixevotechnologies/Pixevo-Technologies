@@ -21,12 +21,21 @@ export const COMPANY_INFO = {
     'To help businesses turn ideas into reliable digital products and smarter technology solutions.',
   vision:
     'To become a trusted technology partner for businesses seeking practical, scalable and innovative digital solutions.',
-  email: 'hello@pixevotech.com',
-  secondaryEmail: 'pixevotechnologies@gmail.com',
-  phone: '+1 (555) 019-2834',
-  location: 'Global Remote & Regional Tech Hubs',
+  email: 'pixevotechnologies@gmail.com',
+  phone: '+92 314 5138009',
+  phoneRaw: '+923145138009',
+  whatsappUrl: 'https://wa.me/923145138009',
+  location: 'Global Remote',
+  businessHours: '9:00 AM – 7:00 PM (PKT) · 7:00 AM – 5:00 PM (KSA)',
+  businessDays: 'Saturday – Thursday (Closed Friday)',
+  responseCommitment: 'Prompt response during business hours',
   website: 'https://pixevotech.com',
-  businessHours: 'Monday – Friday: 09:00 – 18:00 UTC',
+  social: {
+    linkedin: 'https://www.linkedin.com/company/pixevo-technologies/',
+    instagram: 'https://www.instagram.com/pixevotechnologies/',
+    github: 'https://github.com/pixevotechnologies/Pixevo-Technologies',
+    facebook: 'https://www.facebook.com/1255953544265768',
+  },
   yearFounded: '2024',
 };
 

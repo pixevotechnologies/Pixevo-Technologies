@@ -11,6 +11,7 @@ import { ProjectEstimatorModal } from './components/ProjectEstimatorModal';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { JobApplicationModal } from './components/JobApplicationModal';
 import { ArticleModal } from './components/ArticleModal';
+import { PixevoChatbot } from './components/PixevoChatbot';
 
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
@@ -41,15 +42,13 @@ export default function App() {
 
   // When estimator finishes, navigate to contact with prefill
   const handleEstimatorProceed = (estimateData: {
-    serviceName: string;
+    service: string;
     budget: string;
-    timeline: string;
     details: string;
   }) => {
     setContactPrefill({
-      serviceRequired: estimateData.serviceName,
+      serviceRequired: estimateData.service,
       budget: estimateData.budget,
-      timeline: estimateData.timeline,
       projectDetails: estimateData.details,
     });
     setIsEstimatorOpen(false);
@@ -141,6 +140,7 @@ export default function App() {
           <PortfolioPage
             onNavigate={handleNavigate}
             onSelectProject={(project) => setSelectedProject(project)}
+            onOpenEstimator={() => setIsEstimatorOpen(true)}
           />
         )}
 
@@ -205,6 +205,13 @@ export default function App() {
       <ArticleModal
         article={selectedArticle}
         onClose={() => setSelectedArticle(null)}
+      />
+
+      {/* Pixevo AI Assistant Chatbot */}
+      <PixevoChatbot
+        onNavigate={handleNavigate}
+        onOpenEstimator={() => setIsEstimatorOpen(true)}
+        onInquireService={handleInquireService}
       />
     </div>
   );

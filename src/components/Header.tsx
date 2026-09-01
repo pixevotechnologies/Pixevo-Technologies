@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageId } from '../types';
+import { COMPANY_INFO } from '../data/siteData';
 import { PixevoMark } from './PixevoLogo';
 import {
   Menu,
@@ -210,14 +211,14 @@ export const Header: React.FC<HeaderProps> = ({
 
             <div className="flex items-center justify-between pt-2 px-1 text-xs text-slate-400">
               <a
-                href="mailto:hello@pixevotech.com"
+                href={`mailto:${COMPANY_INFO.email}`}
                 className="flex items-center gap-1.5 hover:text-blue-400 transition-colors"
               >
                 <Mail className="w-3.5 h-3.5 text-blue-400" />
-                <span>hello@pixevotech.com</span>
+                <span className="truncate">{COMPANY_INFO.email}</span>
               </a>
               <span className="text-slate-600">•</span>
-              <span className="text-slate-400">Global Tech Partner</span>
+              <span className="text-slate-400 whitespace-nowrap">Global Remote</span>
             </div>
           </div>
         </div>

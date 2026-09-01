@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageId, ProjectItem } from '../types';
 import { PORTFOLIO_DATA } from '../data/siteData';
 import { PageHeader } from '../components/PageHeader';
+import { ModernEcommerceCaseStudy } from '../components/ModernEcommerceCaseStudy';
 import {
   Eye,
   Layers,
@@ -16,11 +17,13 @@ import {
 interface PortfolioPageProps {
   onNavigate: (page: PageId) => void;
   onSelectProject: (project: ProjectItem) => void;
+  onOpenEstimator?: () => void;
 }
 
 export const PortfolioPage: React.FC<PortfolioPageProps> = ({
   onNavigate,
   onSelectProject,
+  onOpenEstimator,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
@@ -49,6 +52,12 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        {/* Featured Case Study Spotlight */}
+        <ModernEcommerceCaseStudy
+          onNavigate={onNavigate}
+          onOpenEstimator={onOpenEstimator}
+        />
+
         {/* Notice Banner */}
         <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/40 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">

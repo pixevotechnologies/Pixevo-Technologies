@@ -14,6 +14,10 @@ import {
 import { HeroVisual } from '../components/HeroVisual';
 import { InteractiveProcess } from '../components/InteractiveProcess';
 import { InteractiveTechStack } from '../components/InteractiveTechStack';
+import { InteractiveTransformation } from '../components/InteractiveTransformation';
+import { LiveArchitectureDashboard } from '../components/LiveArchitectureDashboard';
+import { InteractiveServiceShowcase } from '../components/InteractiveServiceShowcase';
+import { ModernEcommerceCaseStudy } from '../components/ModernEcommerceCaseStudy';
 import { TestimonialsSection } from '../components/TestimonialsSection';
 import { ContactFormSection } from '../components/ContactFormSection';
 import {
@@ -278,7 +282,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             return (
               <div
                 key={service.id}
-                className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between group transition-all hover:bg-slate-800/60 hover:border-slate-700"
+                className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between group transition-all hover:bg-slate-800/60 hover:border-slate-700 hover:-translate-y-1 duration-200"
               >
                 <div className="space-y-4">
                   <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
@@ -333,6 +337,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
+      {/* 3B. INTERACTIVE SERVICE CAPABILITIES SHOWCASE & UI MOCKUPS */}
+      <InteractiveServiceShowcase
+        onNavigate={onNavigate}
+        onOpenEstimator={onOpenEstimator}
+      />
+
       {/* 4. WHY PIXEVO SECTION */}
       <section id="why-pixevo-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl bg-slate-900/40 border border-slate-800 p-8 sm:p-12 lg:p-14 space-y-12">
@@ -353,7 +363,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             {WHY_PIXEVO_POINTS.map((point) => (
               <div
                 key={point.title}
-                className="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-slate-700 space-y-3 transition-all"
+                className="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-slate-700 space-y-3 transition-all hover:-translate-y-1 duration-200"
               >
                 <div className="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
                   <CheckCircle2 className="w-5 h-5" />
@@ -372,7 +382,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="pt-4 text-center">
             <button
               onClick={() => onNavigate('contact')}
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg shadow-blue-900/20 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg shadow-blue-900/20 transition-all cursor-pointer hover:scale-105"
             >
               <span>Talk to Our Engineering Team</span>
               <ArrowRight className="w-4 h-4" />
@@ -380,6 +390,9 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
       </section>
+
+      {/* 4B. BEFORE & AFTER TRANSFORMATION SHOWCASE */}
+      <InteractiveTransformation onExploreServices={() => onNavigate('contact')} />
 
       {/* 5. INTERACTIVE TECHNOLOGY STACK EXPLORER */}
       <section id="tech-stack-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
@@ -398,6 +411,9 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <InteractiveTechStack />
       </section>
+
+      {/* 5B. LIVE ARCHITECTURE TELEMETRY DASHBOARD */}
+      <LiveArchitectureDashboard />
 
       {/* 6. BUSINESS SOLUTIONS SECTION */}
       <section id="solutions-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -526,6 +542,12 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <InteractiveProcess onStartProject={() => onNavigate('contact')} />
       </section>
+
+      {/* 8B. FEATURED CASE STUDY: MODERN E-COMMERCE PLATFORM */}
+      <ModernEcommerceCaseStudy
+        onNavigate={onNavigate}
+        onOpenEstimator={onOpenEstimator}
+      />
 
       {/* 9. PORTFOLIO / CONCEPTS SECTION */}
       <section id="portfolio-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">

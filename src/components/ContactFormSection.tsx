@@ -14,6 +14,11 @@ import {
   ArrowRight,
   MessageSquare,
   FileCheck,
+  MessageCircle,
+  Linkedin,
+  Github,
+  Instagram,
+  Facebook,
 } from 'lucide-react';
 
 interface ContactFormSectionProps {
@@ -102,78 +107,152 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
 
           {/* Contact Direct Cards */}
           <div className="space-y-3 pt-2">
-            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            {/* Email */}
+            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors">
               <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 shrink-0">
                 <Mail className="w-4 h-4" />
               </div>
-              <div className="text-xs space-y-0.5">
+              <div className="text-xs space-y-0.5 min-w-0 flex-1">
                 <span className="font-mono text-slate-400 uppercase tracking-wider block text-[10px]">
                   Email Inquiries
                 </span>
                 <a
                   href={`mailto:${COMPANY_INFO.email}`}
-                  className="font-semibold text-slate-200 hover:text-blue-400 transition-colors block"
+                  className="font-semibold text-slate-200 hover:text-blue-400 transition-colors block truncate"
                 >
                   {COMPANY_INFO.email}
                 </a>
                 <span className="text-slate-400 block text-[11px]">
-                  Direct inbox: {COMPANY_INFO.secondaryEmail}
+                  Direct engineering & partnership inbox
                 </span>
               </div>
             </div>
 
-            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            {/* Phone & WhatsApp */}
+            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors">
               <div className="p-2.5 rounded-lg bg-indigo-500/10 text-indigo-400 shrink-0">
                 <Phone className="w-4 h-4" />
               </div>
-              <div className="text-xs space-y-0.5">
-                <span className="font-mono text-slate-400 uppercase tracking-wider block text-[10px]">
-                  Phone & WhatsApp
-                </span>
+              <div className="text-xs space-y-1 min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-slate-400 uppercase tracking-wider block text-[10px]">
+                    Phone / WhatsApp
+                  </span>
+                  <a
+                    href={COMPANY_INFO.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                  >
+                    <MessageCircle className="w-3 h-3" />
+                    <span>Chat on WhatsApp</span>
+                  </a>
+                </div>
                 <a
-                  href={`tel:${COMPANY_INFO.phone}`}
-                  className="font-semibold text-slate-200 hover:text-blue-400 transition-colors block"
+                  href={`tel:${COMPANY_INFO.phoneRaw}`}
+                  className="font-semibold text-slate-200 hover:text-blue-400 transition-colors block text-sm"
                 >
                   {COMPANY_INFO.phone}
                 </a>
                 <span className="text-slate-400 block text-[11px]">
-                  Direct developer consultation line
+                  Call or message for instant consultation
                 </span>
               </div>
             </div>
 
-            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            {/* Location */}
+            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors">
               <div className="p-2.5 rounded-lg bg-purple-500/10 text-purple-400 shrink-0">
                 <MapPin className="w-4 h-4" />
               </div>
               <div className="text-xs space-y-0.5">
                 <span className="font-mono text-slate-400 uppercase tracking-wider block text-[10px]">
-                  Location & Presence
+                  Headquarters & Delivery
                 </span>
-                <span className="font-semibold text-slate-200 block">
+                <span className="font-semibold text-slate-200 block text-sm">
                   {COMPANY_INFO.location}
                 </span>
                 <span className="text-slate-400 block text-[11px]">
-                  Serving clients in North America, Europe, Asia & worldwide
+                  Distributed engineering delivering to clients globally
                 </span>
               </div>
             </div>
 
-            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            {/* Hours & Response */}
+            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors">
               <div className="p-2.5 rounded-lg bg-cyan-500/10 text-cyan-400 shrink-0">
                 <Clock className="w-4 h-4" />
               </div>
-              <div className="text-xs space-y-0.5">
+              <div className="text-xs space-y-1">
                 <span className="font-mono text-slate-400 uppercase tracking-wider block text-[10px]">
-                  Operational Hours
+                  Business Hours & Availability
                 </span>
-                <span className="font-semibold text-slate-200 block">
-                  {COMPANY_INFO.businessHours}
-                </span>
-                <span className="text-slate-400 block text-[11px]">
-                  Initial response within 24 business hours
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-slate-200">
+                    {COMPANY_INFO.businessHours}
+                  </div>
+                  <div className="text-slate-400 text-[11px]">
+                    {COMPANY_INFO.businessDays}
+                  </div>
+                </div>
+                <span className="text-emerald-400 block text-[11px] font-medium pt-0.5">
+                  • Fast response during business hours
                 </span>
               </div>
+            </div>
+          </div>
+
+          {/* Social Profiles & Channels */}
+          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-200">
+                Official Profiles & Channels
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">
+                Click to open
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <a
+                href={COMPANY_INFO.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2 rounded-lg bg-slate-900 hover:bg-blue-600/20 hover:border-blue-500/40 text-slate-300 hover:text-white border border-slate-800 text-xs transition-all"
+                title="Pixevo Technologies LinkedIn"
+              >
+                <Linkedin className="w-3.5 h-3.5 text-blue-400" />
+                <span className="truncate">LinkedIn</span>
+              </a>
+              <a
+                href={COMPANY_INFO.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2 rounded-lg bg-slate-900 hover:bg-slate-800 hover:border-slate-700 text-slate-300 hover:text-white border border-slate-800 text-xs transition-all"
+                title="Pixevo Technologies GitHub"
+              >
+                <Github className="w-3.5 h-3.5 text-slate-300" />
+                <span className="truncate">GitHub</span>
+              </a>
+              <a
+                href={COMPANY_INFO.social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2 rounded-lg bg-slate-900 hover:bg-pink-600/20 hover:border-pink-500/40 text-slate-300 hover:text-white border border-slate-800 text-xs transition-all"
+                title="Pixevo Technologies Instagram"
+              >
+                <Instagram className="w-3.5 h-3.5 text-pink-400" />
+                <span className="truncate">Instagram</span>
+              </a>
+              <a
+                href={COMPANY_INFO.social.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2 rounded-lg bg-slate-900 hover:bg-blue-700/20 hover:border-blue-600/40 text-slate-300 hover:text-white border border-slate-800 text-xs transition-all"
+                title="Pixevo Technologies Facebook"
+              >
+                <Facebook className="w-3.5 h-3.5 text-blue-500" />
+                <span className="truncate">Facebook</span>
+              </a>
             </div>
           </div>
 
