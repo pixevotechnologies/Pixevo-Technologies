@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageId } from '../types';
-import { INDUSTRIES_DATA } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
 import {
   Hammer,
@@ -28,6 +28,8 @@ export const IndustriesPage: React.FC<IndustriesPageProps> = ({
   onNavigate,
   onInquireIndustry,
 }) => {
+  const { data, language, t } = useLanguage();
+
   const getIndustryIcon = (iconName: string) => {
     switch (iconName) {
       case 'Hammer':
@@ -58,16 +60,16 @@ export const IndustriesPage: React.FC<IndustriesPageProps> = ({
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       <PageHeader
-        category="Industry Specializations"
-        title="Custom Software Solutions Engineered for Specific Industries"
-        description="We tailor digital platforms, internal tools, and mobile applications to solve domain-specific operational challenges across key commercial sectors."
-        currentPageName="Industries"
+        category={language === 'ar' ? 'القطاعات المتخصصة' : 'Industry Specializations'}
+        title={language === 'ar' ? 'حلول برمجية مخصصة ومصممة لقطاعات أعمال محددة' : 'Custom Software Solutions Engineered for Specific Industries'}
+        description={language === 'ar' ? 'نصمم المنصات الرقمية والأدوات الداخلية والتطبيقات لحل التحديات التشغيلية التخصصية عبر أهم القطاعات.' : 'We tailor digital platforms, internal tools, and mobile applications to solve domain-specific operational challenges across key commercial sectors.'}
+        currentPageName={t('nav.industries')}
         onNavigateHome={() => onNavigate('home')}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {INDUSTRIES_DATA.map((ind) => {
+          {data.industries.map((ind) => {
             const Icon = getIndustryIcon(ind.iconName);
             return (
               <div
@@ -85,7 +87,7 @@ export const IndustriesPage: React.FC<IndustriesPageProps> = ({
                         {ind.name}
                       </h2>
                       <span className="text-xs font-mono text-slate-400">
-                        Tailored Software & Workflows
+                        {language === 'ar' ? 'برمجيات وتدفقات عمل مخصصة' : 'Tailored Software & Workflows'}
                       </span>
                     </div>
                   </div>
@@ -97,7 +99,7 @@ export const IndustriesPage: React.FC<IndustriesPageProps> = ({
                   {/* Industry Challenges */}
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-rose-400 block">
-                      Common Sector Challenges
+                      {language === 'ar' ? 'تحديات القطاع الشائعة' : 'Common Sector Challenges'}
                     </span>
                     <ul className="space-y-1">
                       {ind.challenges.map((ch, i) => (
@@ -112,7 +114,7 @@ export const IndustriesPage: React.FC<IndustriesPageProps> = ({
                   {/* Solutions Provided */}
                   <div className="space-y-2 pt-1">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400 block">
-                      Software Solutions We Engineer
+                      {language === 'ar' ? 'الحلول البرمجية التي نهندسها' : 'Software Solutions We Engineer'}
                     </span>
                     <ul className="space-y-1.5">
                       {ind.solutionsProvided.map((sol, i) => (
@@ -127,14 +129,14 @@ export const IndustriesPage: React.FC<IndustriesPageProps> = ({
 
                 <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
                   <div className="text-[11px] text-slate-400">
-                    <span className="font-semibold text-slate-300">Impact: </span>
+                    <span className="font-semibold text-slate-300">{language === 'ar' ? 'النتائج: ' : 'Impact: '}</span>
                     {ind.keyBenefits.join(' • ')}
                   </div>
                   <button
                     onClick={() => onInquireIndustry(ind.name)}
                     className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full transition-all whitespace-nowrap cursor-pointer shadow-md shadow-blue-900/20"
                   >
-                    <span>Discuss Build</span>
+                    <span>{language === 'ar' ? 'مناقشة المشروع' : 'Discuss Build'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>

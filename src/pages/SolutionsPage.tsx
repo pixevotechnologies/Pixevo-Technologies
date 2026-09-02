@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageId } from '../types';
-import { SOLUTIONS_DATA } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
 import {
   KanbanSquare,
@@ -27,6 +27,8 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
   onNavigate,
   onInquireSolution,
 }) => {
+  const { data, language, t } = useLanguage();
+
   const getSolutionIcon = (iconName: string) => {
     switch (iconName) {
       case 'KanbanSquare':
@@ -55,16 +57,16 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       <PageHeader
-        category="Tailored Business Solutions"
-        title="Software Systems Built Around Your Operational Workflows"
-        description="Replace fragmented spreadsheets, off-the-shelf constraints, and disconnected tools with custom software solutions engineered specifically for your business."
-        currentPageName="Solutions"
+        category={language === 'ar' ? 'حلول أعمال مخصصة' : 'Tailored Business Solutions'}
+        title={language === 'ar' ? 'أنظمة برمجية مبنية وفق تدفقات عملياتك الفعلية' : 'Software Systems Built Around Your Operational Workflows'}
+        description={language === 'ar' ? 'استبدل الجداول المشتتة والبرمجيات الجاهزة المحدودة بأنظمة برمجية مخصصة ومصممة بدقة لعمليات شركتك.' : 'Replace fragmented spreadsheets, off-the-shelf constraints, and disconnected tools with custom software solutions engineered specifically for your business.'}
+        currentPageName={t('nav.solutions')}
         onNavigateHome={() => onNavigate('home')}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {SOLUTIONS_DATA.map((sol) => {
+          {data.solutions.map((sol) => {
             const Icon = getSolutionIcon(sol.iconName);
             return (
               <div
@@ -94,7 +96,7 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
                   {/* Business Impact */}
                   <div className="space-y-2 pt-2 border-t border-slate-800">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                      Business Impact
+                      {language === 'ar' ? 'الأثر التجاري والتشغيلي' : 'Business Impact'}
                     </span>
                     <ul className="space-y-1.5">
                       {sol.businessImpact.map((impact, i) => (
@@ -109,7 +111,7 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
                   {/* Key Modules */}
                   <div className="space-y-1.5 pt-2 border-t border-slate-800">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                      Key Modules Included
+                      {language === 'ar' ? 'الوحدات والموديولات المتضمنة' : 'Key Modules Included'}
                     </span>
                     <div className="flex flex-wrap gap-1.5">
                       {sol.keyModules.map((mod) => (
@@ -126,14 +128,14 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
 
                 <div className="pt-4 border-t border-slate-800 space-y-3">
                   <div className="text-[11px] text-slate-400">
-                    <span className="font-semibold text-slate-300">Ideal For: </span>
+                    <span className="font-semibold text-slate-300">{language === 'ar' ? 'ملائم لـ: ' : 'Ideal For: '}</span>
                     {sol.idealFor}
                   </div>
                   <button
                     onClick={() => onInquireSolution(sol.title)}
                     className="w-full py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-blue-600 border border-slate-800 hover:border-blue-500 rounded-full transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                   >
-                    <span>Inquire About This Solution</span>
+                    <span>{language === 'ar' ? 'طلب استشارة حول هذا الحل' : 'Inquire About This Solution'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>

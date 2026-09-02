@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Calculator,
+  Loader2,
 } from 'lucide-react';
 import { PageId } from '../types';
 
@@ -37,6 +38,7 @@ export const ProjectEstimatorModal: React.FC<ProjectEstimatorModalProps> = ({
   const [timelinePreference, setTimelinePreference] = useState<'standard' | 'accelerated'>(
     'standard'
   );
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -110,17 +112,21 @@ export const ProjectEstimatorModal: React.FC<ProjectEstimatorModalProps> = ({
   const estimate = calculateEstimate();
 
   const handleTransferToInquiry = () => {
-    const summary = `Project Type: ${projectType}\nComplexity Tier: ${complexity.toUpperCase()}\nSelected Features: ${features.join(
-      ', '
-    )}\nEstimated Timeline: ${estimate.estimatedWeeks}\nRecommended Stack: ${
-      estimate.stack
-    }`;
-    onProceedToContact({
-      service: projectType,
-      budget: estimate.budgetGuide,
-      details: summary,
-    });
-    onClose();
+    setIsGenerating(true);
+    setTimeout(() => {
+      const summary = `Project Type: ${projectType}\nComplexity Tier: ${complexity.toUpperCase()}\nSelected Features: ${features.join(
+        ', '
+      )}\nEstimated Timeline: ${estimate.estimatedWeeks}\nRecommended Stack: ${
+        estimate.stack
+      }`;
+      onProceedToContact({
+        service: projectType,
+        budget: estimate.budgetGuide,
+        details: summary,
+      });
+      setIsGenerating(false);
+      onClose();
+    }, 450);
   };
 
   return (
@@ -293,10 +299,21 @@ export const ProjectEstimatorModal: React.FC<ProjectEstimatorModalProps> = ({
             <div className="pt-4 border-t border-slate-800 space-y-2">
               <button
                 onClick={handleTransferToInquiry}
-                className="w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-900/20 transition-all cursor-pointer"
+                disabled={isGenerating}
+                id="transfer-estimate-to-inquiry-btn"
+                className="w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:opacity-75 rounded-full shadow-md shadow-blue-900/20 transition-all cursor-pointer"
               >
-                <span>Discuss This Scope With Our Engineers</span>
-                <ArrowRight className="w-4 h-4" />
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Generating Scope Breakdown...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Discuss This Scope With Our Engineers</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </button>
               <p className="text-[11px] text-center text-slate-500">
                 Transfers these specifications directly into your project inquiry.

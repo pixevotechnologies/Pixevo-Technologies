@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageId, TestimonialItem } from '../types';
-import { TESTIMONIALS_DATA } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import {
   MessageSquareQuote,
   Star,
@@ -21,15 +21,23 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   onNavigate,
   showNotice = true,
 }) => {
+  const { data, language, t } = useLanguage();
   const [filter, setFilter] = useState<'all' | 'enterprise' | 'mobile' | 'ai'>('all');
 
-  const filteredTestimonials = TESTIMONIALS_DATA.filter((item) => {
+  const filteredTestimonials = data.testimonials.filter((item) => {
     if (filter === 'all') return true;
-    if (filter === 'enterprise') return item.projectScope?.toLowerCase().includes('enterprise') || item.projectScope?.toLowerCase().includes('saas');
-    if (filter === 'mobile') return item.projectScope?.toLowerCase().includes('mobile') || item.projectScope?.toLowerCase().includes('ios');
-    if (filter === 'ai') return item.projectScope?.toLowerCase().includes('ai') || item.projectScope?.toLowerCase().includes('automation');
+    if (filter === 'enterprise') return item.projectScope?.toLowerCase().includes('enterprise') || item.projectScope?.toLowerCase().includes('saas') || item.projectScope?.includes('مؤسسية') || item.projectScope?.includes('سحابية');
+    if (filter === 'mobile') return item.projectScope?.toLowerCase().includes('mobile') || item.projectScope?.toLowerCase().includes('ios') || item.projectScope?.includes('هاتف') || item.projectScope?.includes('تطبيق');
+    if (filter === 'ai') return item.projectScope?.toLowerCase().includes('ai') || item.projectScope?.toLowerCase().includes('automation') || item.projectScope?.includes('ذكاء') || item.projectScope?.includes('أتمتة');
     return true;
   });
+
+  const filterTabs = [
+    { id: 'all', label: language === 'ar' ? 'جميع الآراء' : 'All Reviews' },
+    { id: 'enterprise', label: language === 'ar' ? 'الأنظمة المؤسسية و SaaS' : 'Enterprise & SaaS' },
+    { id: 'mobile', label: language === 'ar' ? 'تطبيقات الهواتف' : 'Mobile Apps' },
+    { id: 'ai', label: language === 'ar' ? 'الذكاء الاصطناعي والأتمتة' : 'AI & Automation' },
+  ];
 
   return (
     <section id="testimonials-section" className="space-y-10">
@@ -38,13 +46,15 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
             <MessageSquareQuote className="w-3.5 h-3.5" />
-            <span>Client Endorsements & Feedback</span>
+            <span>{language === 'ar' ? 'آراء وتوصيات العملاء' : 'Client Endorsements & Feedback'}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-white tracking-tight">
-            What Clients Say About Working With Us
+            {language === 'ar' ? 'ماذا يقول شركاؤنا وعملاؤنا عن العمل معنا' : 'What Clients Say About Working With Us'}
           </h2>
           <p className="text-slate-400 text-sm">
-            Read perspectives from founders, engineering leads, and product owners who partnered with Pixevo Technologies.
+            {language === 'ar'
+              ? 'تجارب وآراء المؤسسين، والمديرين التقنيين، وقادة المنتجات الذين وثقوا في بيكسيفو للتقنية لتنفيذ مشاريعهم.'
+              : 'Read perspectives from founders, engineering leads, and product owners who partnered with Pixevo Technologies.'}
           </p>
         </div>
 
@@ -53,8 +63,8 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             onClick={() => onNavigate('contact')}
             className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-900/20 transition-all whitespace-nowrap cursor-pointer"
           >
-            <span>Start a Project & Share Feedback</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>{language === 'ar' ? 'ابدأ مشروعك وشارك تجربتك' : 'Start a Project & Share Feedback'}</span>
+            <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
           </button>
         )}
       </div>
@@ -68,28 +78,25 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             </div>
             <div>
               <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
-                Testimonial Showcase Section
+                {language === 'ar' ? 'قسم آراء وتقييمات العملاء' : 'Testimonial Showcase Section'}
               </span>
               <p className="text-xs text-slate-400 mt-0.5">
-                The entries below are sample placeholder templates. Real client reviews, video testimonials, and partner quotes can be easily updated and published here as engagements conclude.
+                {language === 'ar'
+                  ? 'النماذج أدناه هي عينات أولية لتجارب المشاريع. يتم تحديث ونشر مراجعات وتقييمات العملاء الحقيقية فور اكتمال وتسليم المشاريع.'
+                  : 'The entries below are sample placeholder templates. Real client reviews, video testimonials, and partner quotes can be easily updated and published here as engagements conclude.'}
               </p>
             </div>
           </div>
 
           <span className="px-3 py-1 text-[11px] font-mono rounded-full bg-slate-950 border border-slate-800 text-slate-400 whitespace-nowrap">
-            Template Slot Ready
+            {language === 'ar' ? 'جاهز للعرض' : 'Template Slot Ready'}
           </span>
         </div>
       )}
 
       {/* Category Filter Chips */}
       <div className="flex flex-wrap items-center gap-2">
-        {[
-          { id: 'all', label: 'All Reviews' },
-          { id: 'enterprise', label: 'Enterprise & SaaS' },
-          { id: 'mobile', label: 'Mobile Apps' },
-          { id: 'ai', label: 'AI & Automation' },
-        ].map((tab) => (
+        {filterTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setFilter(tab.id as any)}
@@ -128,7 +135,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 <div className="flex items-center gap-2">
                   {testimonial.isPlaceholder && (
                     <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-950 text-slate-400 border border-slate-800">
-                      Sample Testimonial
+                      {language === 'ar' ? 'نموذج تقييم' : 'Sample Testimonial'}
                     </span>
                   )}
                   <span className="text-xs font-mono text-slate-500">
@@ -139,8 +146,8 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
 
               {/* Quote text */}
               <div className="relative">
-                <Quote className="w-8 h-8 text-blue-500/20 absolute -top-2 -left-1 pointer-events-none" />
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed pl-6 relative z-10 italic">
+                <Quote className="w-8 h-8 text-blue-500/20 absolute -top-2 -left-1 rtl:-left-auto rtl:-right-1 pointer-events-none" />
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed pl-6 rtl:pl-0 rtl:pr-6 relative z-10 italic">
                   "{testimonial.quote}"
                 </p>
               </div>
@@ -150,7 +157,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 <div className="pt-1">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-slate-400 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
                     <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
-                    <span>Scope: {testimonial.projectScope}</span>
+                    <span>{language === 'ar' ? 'نطاق المشروع' : 'Scope'}: {testimonial.projectScope}</span>
                   </span>
                 </div>
               )}
@@ -181,16 +188,18 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
       {/* Add Your Testimonial Prompt Footer */}
       <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-2">
         <p className="text-xs text-slate-400">
-          Have you partnered with Pixevo Technologies on a custom software, mobile app, or AI project?
+          {language === 'ar'
+            ? 'هل تعاونت مع بيكسيفو للتقنية في تطوير برمجيات، أو تطبيقات موبايل، أو حلول الذكاء الاصطناعي؟'
+            : 'Have you partnered with Pixevo Technologies on a custom software, mobile app, or AI project?'}
         </p>
-        <div className="flex items-center justify-center gap-3 text-xs font-semibold text-blue-400">
-          <span>We value every client relationship and feedback loop.</span>
+        <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-blue-400">
+          <span>{language === 'ar' ? 'نعتز بكل شراكة تقنية ونرحب بملاحظاتكم دائماً.' : 'We value every client relationship and feedback loop.'}</span>
           {onNavigate && (
             <button
               onClick={() => onNavigate('contact')}
               className="underline hover:text-blue-300 cursor-pointer"
             >
-              Get in touch to submit a case quote →
+              {language === 'ar' ? 'تواصل معنا لمشاركة تجربتك ←' : 'Get in touch to submit a case quote →'}
             </button>
           )}
         </div>
@@ -198,3 +207,4 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     </section>
   );
 };
+

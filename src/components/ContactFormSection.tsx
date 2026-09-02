@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { ContactFormData } from '../types';
 import { COMPANY_INFO, SERVICES_DATA } from '../data/siteData';
 import {
+  submitContactInquiry,
+  generateDirectMailtoUrl,
+  generateWhatsAppInquiryUrl,
+} from '../services/emailService';
+import {
   Send,
   Mail,
   Phone,
@@ -19,6 +24,8 @@ import {
   Github,
   Instagram,
   Facebook,
+  Loader2,
+  ExternalLink,
 } from 'lucide-react';
 
 interface ContactFormSectionProps {
@@ -47,7 +54,9 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
   const [callDate, setCallDate] = useState<string>('2026-09-01');
   const [callTime, setCallTime] = useState<string>('14:00 UTC');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [inquiryId, setInquiryId] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (prefill) {
@@ -60,11 +69,37 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
     }
   }, [prefill]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const id = `PIX-${Math.floor(100000 + Math.random() * 900000)}`;
-    setInquiryId(id);
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const payload = {
+        type: activeTab,
+        fullName: formData.fullName,
+        email: formData.email,
+        company: formData.company,
+        phone: formData.phone,
+        serviceRequired: formData.serviceRequired,
+        budget: formData.budget,
+        projectDetails: formData.projectDetails,
+        timeline: formData.timeline,
+        callDate: activeTab === 'call' ? callDate : undefined,
+        callTime: activeTab === 'call' ? callTime : undefined,
+      };
+
+      const result = await submitContactInquiry(payload);
+      setInquiryId(result.inquiryId);
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error('Submission failed:', err);
+      setErrorMessage(
+        'There was an issue dispatching the form. You can still email us directly at pixevotechnologies@gmail.com or click the WhatsApp button.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const budgetRanges = [
@@ -298,35 +333,109 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
           </div>
 
           {submitted ? (
-            <div className="py-10 text-center space-y-4">
+            <div className="py-8 text-center space-y-5">
               <div className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
               <div className="space-y-1">
-                <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
-                  Inquiry Received • Ref: {inquiryId}
-                </span>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-semibold">
+                  <span>Delivered to {COMPANY_INFO.email}</span>
+                </div>
                 <h3 className="text-2xl font-bold font-['Outfit'] text-white">
                   Thank You, {formData.fullName || 'Partner'}!
                 </h3>
+                <p className="text-xs font-mono text-slate-400">
+                  Tracking Reference ID: <strong className="text-blue-400">{inquiryId}</strong>
+                </p>
               </div>
+
+              <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 text-left text-xs space-y-2 max-w-lg mx-auto">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <span className="text-slate-400">Target Service:</span>
+                  <span className="font-semibold text-white">{formData.serviceRequired}</span>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <span className="text-slate-400">Budget Range:</span>
+                  <span className="font-semibold text-emerald-400">{formData.budget}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Follow-up Destination:</span>
+                  <span className="font-semibold text-blue-400 truncate max-w-[200px]">{formData.email}</span>
+                </div>
+              </div>
+
               <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                We have received your project inquiry for{' '}
-                <span className="text-blue-400 font-semibold">{formData.serviceRequired}</span>.
-                A technical lead will review your requirements and follow up at{' '}
-                <span className="text-white font-semibold">{formData.email}</span> within 24 hours.
+                Your inquiry has been dispatched to our engineering architecture leads. We will review your technical requirements and contact you within 24 hours.
               </p>
-              <div className="pt-4 flex justify-center gap-3">
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="px-5 py-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white border border-slate-700 cursor-pointer"
+
+              {/* Direct Action Buttons */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a
+                  href={generateDirectMailtoUrl({
+                    fullName: formData.fullName,
+                    company: formData.company,
+                    email: formData.email,
+                    phone: formData.phone,
+                    serviceRequired: formData.serviceRequired,
+                    budget: formData.budget,
+                    projectDetails: formData.projectDetails,
+                    timeline: formData.timeline,
+                    callDate: activeTab === 'call' ? callDate : undefined,
+                    callTime: activeTab === 'call' ? callTime : undefined,
+                  })}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 text-xs font-semibold transition-all cursor-pointer"
                 >
-                  Send Another Inquiry
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>Open Direct Copy in Mail App</span>
+                </a>
+
+                <a
+                  href={generateWhatsAppInquiryUrl({
+                    fullName: formData.fullName,
+                    company: formData.company,
+                    email: formData.email,
+                    serviceRequired: formData.serviceRequired,
+                    budget: formData.budget,
+                    projectDetails: formData.projectDetails,
+                  })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition-all cursor-pointer"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Instant WhatsApp Follow-up</span>
+                </a>
+              </div>
+
+              <div className="pt-3">
+                <button
+                  onClick={() => {
+                    setSubmitted(false);
+                    setFormData({
+                      fullName: '',
+                      company: '',
+                      email: '',
+                      phone: '',
+                      serviceRequired: 'Custom Software Development',
+                      budget: '$15k – $35k',
+                      projectDetails: '',
+                      timeline: 'Within 1 - 2 Months',
+                    });
+                  }}
+                  className="text-xs text-slate-400 hover:text-slate-200 underline cursor-pointer"
+                >
+                  Submit Another Project Inquiry
                 </button>
               </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {errorMessage && (
+                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2">
+                  <Mail className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
               {activeTab === 'call' && (
                 <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3 mb-4">
                   <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
@@ -501,10 +610,20 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                 <button
                   type="submit"
                   id="submit-project-inquiry-btn"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg shadow-blue-900/20 transition-all cursor-pointer"
+                  disabled={isSubmitting}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:opacity-60 rounded-full shadow-lg shadow-blue-900/20 transition-all cursor-pointer"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>Send Project Inquiry</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Dispatching to pixevotechnologies@gmail.com...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Send Project Inquiry</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>

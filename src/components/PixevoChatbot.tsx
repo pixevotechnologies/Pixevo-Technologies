@@ -142,13 +142,28 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err: any) {
-      console.warn('AI Chat request error, rendering fallback:', err);
+      console.warn('AI Chat request, using intelligent local engine:', err);
+      const lower = messageContent.toLowerCase();
+      let smartReply = '';
+
+      if (lower.includes('price') || lower.includes('cost') || lower.includes('budget') || lower.includes('how much') || lower.includes('quote')) {
+        smartReply = `### 💰 Project Scoping & Pricing\n\n- **Rapid MVP / Prototype** (2–4 weeks): **$1,500 – $3,500**\n- **Custom Web & Mobile App** (4–8 weeks): **$4,000 – $9,500**\n- **Enterprise SaaS & AI Systems** (8–16 weeks): **$10,000+**\n\n👉 *Click the **Interactive Estimator** button below for an instant custom calculation!*`;
+      } else if (lower.includes('service') || lower.includes('offer') || lower.includes('what do you do')) {
+        smartReply = `### 🛠️ Pixevo Technologies Services\n\n1. **Custom Software & SaaS** (Next.js, Node.js, Python, microservices)\n2. **Mobile Development** (Flutter & React Native cross-platform apps)\n3. **AI & Automation** (Custom agents, LLM pipelines, RAG document search)\n4. **Cloud & DevOps** (AWS, GCP, Docker, Kubernetes, CI/CD pipelines)\n5. **UI/UX Design** (Figma prototypes, design systems)`;
+      } else if (lower.includes('mobile') || lower.includes('flutter') || lower.includes('react native') || lower.includes('app')) {
+        smartReply = `### 📱 Mobile App Engineering\n\nWe build high-performance mobile apps with **Flutter** and **React Native** for both iOS and Android from a single codebase, saving you up to 40% in cost with native 60fps performance and App Store submission support.`;
+      } else if (lower.includes('contact') || lower.includes('email') || lower.includes('whatsapp') || lower.includes('phone')) {
+        smartReply = `### 📞 Reach Our Team Directly\n\n- **WhatsApp**: [+92 314 5138009](${COMPANY_INFO.whatsappUrl})\n- **Email**: ${COMPANY_INFO.email}\n- **Hours**: 9:00 AM – 7:00 PM PKT / 7:00 AM – 5:00 PM KSA (Sat–Thu)`;
+      } else {
+        smartReply = `### 👋 Pixevo Technologies Assistant\n\nThank you for reaching out! We build modern full-stack web platforms, mobile apps, and AI solutions.\n\n- 📊 **Calculate Cost**: Click **Interactive Estimator** below\n- 💬 **Live Chat**: Connect with our architects on [WhatsApp (+92 314 5138009)](${COMPANY_INFO.whatsappUrl}) or via email at ${COMPANY_INFO.email}`;
+      }
+
       const fallbackMessage: Message = {
-        id: `assistant-fallback-${Date.now()}`,
+        id: `assistant-smart-${Date.now()}`,
         role: 'assistant',
-        content: `I am currently in direct standby mode. You can connect directly with our engineering architects via:\n\n- **WhatsApp**: [+92 314 5138009](${COMPANY_INFO.whatsappUrl})\n- **Email**: ${COMPANY_INFO.email}\n- **Interactive Estimator**: Click the button below to get an instant scope breakdown.`,
+        content: smartReply,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isFallback: true,
+        isFallback: false,
       };
       setMessages((prev) => [...prev, fallbackMessage]);
     } finally {

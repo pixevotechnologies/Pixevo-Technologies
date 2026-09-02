@@ -120,7 +120,7 @@ export interface FAQItem {
   id: string;
   question: string;
   answer: string;
-  category: 'General' | 'Development' | 'Security & IP' | 'Pricing & Support';
+  category: 'General' | 'Development' | 'Technology' | 'Process' | 'Security & IP' | 'Pricing & Support';
 }
 
 export interface TestimonialItem {
@@ -133,6 +133,29 @@ export interface TestimonialItem {
   rating?: number;
   avatarInitials?: string;
   isPlaceholder?: boolean;
+}
+
+export interface SuccessStoryItem {
+  id: string;
+  title: string;
+  client: string;
+  industry: string;
+  category: string;
+  timeline: string;
+  problem: string;
+  solution: string;
+  keyMetrics: {
+    label: string;
+    value: string;
+    description: string;
+  }[];
+  technologies: string[];
+  quote?: {
+    text: string;
+    author: string;
+    role: string;
+  };
+  badge?: string;
 }
 
 export interface ContactFormData {

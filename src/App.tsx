@@ -112,13 +112,17 @@ export default function App() {
         )}
 
         {currentPage === 'about' && (
-          <AboutPage onNavigate={handleNavigate} />
+          <AboutPage
+            onNavigate={handleNavigate}
+            onOpenEstimator={() => setIsEstimatorOpen(true)}
+          />
         )}
 
         {currentPage === 'services' && (
           <ServicesPage
             onNavigate={handleNavigate}
             onInquireService={handleInquireService}
+            onOpenEstimator={() => setIsEstimatorOpen(true)}
           />
         )}
 

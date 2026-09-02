@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageId, BlogPost } from '../types';
-import { BLOG_POSTS } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
 import {
   Calendar,
@@ -22,20 +22,17 @@ export const BlogPage: React.FC<BlogPageProps> = ({
   onNavigate,
   onSelectArticle,
 }) => {
+  const { data, language, t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const categories = [
-    'All',
-    'AI & Automation',
-    'Software Architecture',
-    'Mobile & Cross-Platform',
-    'UI/UX & Product Design',
-  ];
+  const categories = language === 'ar'
+    ? ['الكل', 'ذكاء اصطناعي وأتمتة', 'هندسة ومعمارية البرمجيات', 'تطبيقات الهواتف والمنصات المتعددة', 'تصميم الواجهات وتجربة المستخدم']
+    : ['All', 'AI & Automation', 'Software Architecture', 'Mobile & Cross-Platform', 'UI/UX & Product Design'];
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const filteredPosts = data.blogPosts.filter((post) => {
     const matchesCategory =
-      selectedCategory === 'All' || post.category === selectedCategory;
+      selectedCategory === 'All' || selectedCategory === 'الكل' || post.category === selectedCategory;
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -46,10 +43,10 @@ export const BlogPage: React.FC<BlogPageProps> = ({
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       <PageHeader
-        category="Engineering Insights & Knowledge"
-        title="Technology, Architecture & Software Guides"
-        description="Practical analysis, architectural strategies, and technical insights from the engineering team at Pixevo Technologies."
-        currentPageName="Blog & Insights"
+        category={language === 'ar' ? 'الرؤى والمقالات الهندسية' : 'Engineering Insights & Knowledge'}
+        title={language === 'ar' ? 'دليل التكنولوجيا وهندسة البرمجيات' : 'Technology, Architecture & Software Guides'}
+        description={language === 'ar' ? 'تحليلات عملية واستراتيجيات معمارية ورؤى تقنية من الفريق الهندسي في بيكسيفو تكنولوجيز.' : 'Practical analysis, architectural strategies, and technical insights from the engineering team at Pixevo Technologies.'}
+        currentPageName={t('nav.blog')}
         onNavigateHome={() => onNavigate('home')}
       />
 
@@ -63,7 +60,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                  selectedCategory === cat
+                  selectedCategory === cat || (selectedCategory === 'All' && cat === 'الكل') || (selectedCategory === 'الكل' && cat === 'All')
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20'
                     : 'bg-slate-950 text-slate-300 hover:bg-slate-900 hover:text-white border border-slate-800'
                 }`}
@@ -80,7 +77,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search articles or tags..."
+              placeholder={language === 'ar' ? 'البحث في المقالات أو الوسوم...' : 'Search articles or tags...'}
               className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-950 border border-slate-800 rounded-full text-white placeholder:text-slate-500 focus:outline-none focus:border-slate-700"
             />
           </div>
@@ -91,7 +88,9 @@ export const BlogPage: React.FC<BlogPageProps> = ({
           <div className="text-center py-16 space-y-3">
             <BookOpen className="w-10 h-10 text-slate-600 mx-auto" />
             <p className="text-slate-400 text-sm">
-              No articles found matching "{searchQuery}". Try selecting another category or clearing your query.
+              {language === 'ar'
+                ? `لم يتم العثور على مقالات تطابق "${searchQuery}". جرب تصنيفاً آخر.`
+                : `No articles found matching "${searchQuery}". Try selecting another category or clearing your query.`}
             </p>
           </div>
         ) : (
@@ -148,7 +147,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
                   </div>
 
                   <span className="font-semibold text-blue-400 group-hover:text-blue-300 flex items-center gap-1">
-                    <span>Read Article</span>
+                    <span>{language === 'ar' ? 'قراءة المقال' : 'Read Article'}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </div>

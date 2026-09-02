@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageId } from '../types';
-import { PROCESS_STEPS } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
 import { InteractiveProcess } from '../components/InteractiveProcess';
 import {
@@ -21,15 +21,16 @@ interface ProcessPageProps {
 }
 
 export const ProcessPage: React.FC<ProcessPageProps> = ({ onNavigate }) => {
+  const { data, language, t } = useLanguage();
   const stepIcons = [Compass, FileCode2, Palette, Cpu, Rocket];
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       <PageHeader
-        category="Our Engineering Methodology"
-        title="Predictable, Transparent 5-Step Development Process"
-        description="We follow a disciplined agile framework that minimizes risk, ensures high code quality, and provides complete visibility from initial requirements to post-launch scaling."
-        currentPageName="Process"
+        category={language === 'ar' ? 'منهجيتنا الهندسية' : 'Our Engineering Methodology'}
+        title={language === 'ar' ? 'مسار تطوير واضح ومنضبط في 5 مراحل شفافة' : 'Predictable, Transparent 5-Step Development Process'}
+        description={language === 'ar' ? 'نتبع إطار عمل أجايل منضبط يقلل المخاطر ويضمن جودة الكود البرمجي مع وضوح كامل من المتطلبات الأولية حتى الإطلاق.' : 'We follow a disciplined agile framework that minimizes risk, ensures high code quality, and provides complete visibility from initial requirements to post-launch scaling.'}
+        currentPageName={t('nav.process')}
         onNavigateHome={() => onNavigate('home')}
       />
 
@@ -38,10 +39,10 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({ onNavigate }) => {
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
-              Interactive Phase Inspector
+              {language === 'ar' ? 'المستكشف التفاعلي للمراحل' : 'Interactive Phase Inspector'}
             </span>
             <h2 className="text-3xl font-bold font-['Outfit'] text-white">
-              Explore Each Phase in Detail
+              {language === 'ar' ? 'استكشف كل مرحلة تفصيلياً' : 'Explore Each Phase in Detail'}
             </h2>
           </div>
           <InteractiveProcess onStartProject={() => onNavigate('contact')} />
@@ -51,16 +52,16 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({ onNavigate }) => {
         <section className="space-y-10">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
-              End-to-End Lifecycle
+              {language === 'ar' ? 'دورة حياة المشروع الشاملة' : 'End-to-End Lifecycle'}
             </span>
             <h2 className="text-3xl font-bold font-['Outfit'] text-white">
-              Comprehensive Phase Deliverables
+              {language === 'ar' ? 'المخرجات التفصيلية لكل مرحلة' : 'Comprehensive Phase Deliverables'}
             </h2>
           </div>
 
           <div className="space-y-6">
-            {PROCESS_STEPS.map((step, idx) => {
-              const Icon = stepIcons[idx];
+            {data.processSteps.map((step, idx) => {
+              const Icon = stepIcons[idx] || Cpu;
               return (
                 <div
                   key={step.number}
@@ -77,7 +78,7 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({ onNavigate }) => {
                           {step.title} — {step.tagline}
                         </h3>
                         <span className="text-xs font-mono text-slate-400">
-                          Estimated Duration: {step.durationEstimate}
+                          {language === 'ar' ? 'المدة التقديرية: ' : 'Estimated Duration: '}{step.durationEstimate}
                         </span>
                       </div>
                     </div>
@@ -94,7 +95,7 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({ onNavigate }) => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                     <div className="space-y-2">
                       <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                        Core Activities
+                        {language === 'ar' ? 'الأنشطة الأساسية' : 'Core Activities'}
                       </span>
                       <ul className="space-y-1.5">
                         {step.keyActivities.map((act, i) => (
@@ -108,7 +109,7 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({ onNavigate }) => {
 
                     <div className="space-y-2">
                       <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                        Tangible Deliverables
+                        {language === 'ar' ? 'المخرجات الملموسة' : 'Tangible Deliverables'}
                       </span>
                       <ul className="space-y-1.5">
                         {step.deliverables.map((deliv, i) => (
@@ -130,28 +131,30 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({ onNavigate }) => {
         <section className="p-8 sm:p-10 rounded-2xl bg-slate-900/40 border border-slate-800 space-y-6">
           <div className="space-y-2">
             <span className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
-              Quality Assurance & Verification
+              {language === 'ar' ? 'ضمان الجودة والتحقق الهندسي' : 'Quality Assurance & Verification'}
             </span>
             <h3 className="text-2xl font-bold font-['Outfit'] text-white">
-              Engineering Rigor Built into Every Sprint
+              {language === 'ar' ? 'صرامة هندسية مدمجة في كل مرحلة تطوير' : 'Engineering Rigor Built into Every Sprint'}
             </h3>
             <p className="text-slate-400 text-sm max-w-3xl leading-relaxed">
-              We do not postpone testing until the end of a project. Automated unit tests, integration validation, and cross-device security checks run continuously through automated CI/CD pipelines.
+              {language === 'ar'
+                ? 'لا نؤجل الاختبار حتى نهاية المشروع. تُجرى الاختبارات الآلية والتحقق التكاملي وفحوصات الأمان عبر مسارات CI/CD مؤتمتة باستمرار.'
+                : 'We do not postpone testing until the end of a project. Automated unit tests, integration validation, and cross-device security checks run continuously through automated CI/CD pipelines.'}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
             <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1">
-              <span className="text-white font-bold block font-['Outfit']">Static Type Checking</span>
-              <span className="text-slate-400">100% strict TypeScript typing ensuring runtime reliability.</span>
+              <span className="text-white font-bold block font-['Outfit']">{language === 'ar' ? 'التحقق الساكن من الأنواع' : 'Static Type Checking'}</span>
+              <span className="text-slate-400">{language === 'ar' ? 'أنواع TypeScript صارمة بنسبة 100% لموثوقية عالية أثناء التشغيل.' : '100% strict TypeScript typing ensuring runtime reliability.'}</span>
             </div>
             <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1">
-              <span className="text-white font-bold block font-['Outfit']">Automated Pipelines</span>
-              <span className="text-slate-400">GitHub Actions continuous integration running unit & integration suites.</span>
+              <span className="text-white font-bold block font-['Outfit']">{language === 'ar' ? 'مسارات التكامل المؤتمتة' : 'Automated Pipelines'}</span>
+              <span className="text-slate-400">{language === 'ar' ? 'تكامل مستمر عبر GitHub Actions يشغّل وحدات الاختبار الآلية.' : 'GitHub Actions continuous integration running unit & integration suites.'}</span>
             </div>
             <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1">
-              <span className="text-white font-bold block font-['Outfit']">Zero-Downtime Releases</span>
-              <span className="text-slate-400">Containerized deployments with instant rollback safeguards.</span>
+              <span className="text-white font-bold block font-['Outfit']">{language === 'ar' ? 'إطلاقات مستمرة دون انقطاع' : 'Zero-Downtime Releases'}</span>
+              <span className="text-slate-400">{language === 'ar' ? 'نشر وتوزيع عبر الحاويات مع إجراءات استرجاع فورية عند الطوارئ.' : 'Containerized deployments with instant rollback safeguards.'}</span>
             </div>
           </div>
         </section>

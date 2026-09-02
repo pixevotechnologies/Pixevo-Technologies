@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageId, ProjectItem } from '../types';
-import { PORTFOLIO_DATA } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
 import { ModernEcommerceCaseStudy } from '../components/ModernEcommerceCaseStudy';
 import {
@@ -25,29 +25,25 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
   onSelectProject,
   onOpenEstimator,
 }) => {
+  const { data, language, t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const categories = [
-    'All',
-    'Enterprise Software',
-    'Web Application',
-    'Mobile App',
-    'AI & Automation',
-    'E-commerce',
-  ];
+  const categories = language === 'ar'
+    ? ['الكل', 'برمجيات مؤسسية', 'تطبيقات ويب', 'تطبيقات هواتف', 'ذكاء اصطناعي وأتمتة', 'تجارة إلكترونية']
+    : ['All', 'Enterprise Software', 'Web Application', 'Mobile App', 'AI & Automation', 'E-commerce'];
 
   const filteredProjects =
-    selectedCategory === 'All'
-      ? PORTFOLIO_DATA
-      : PORTFOLIO_DATA.filter((p) => p.category === selectedCategory);
+    selectedCategory === 'All' || selectedCategory === 'الكل'
+      ? data.portfolio
+      : data.portfolio.filter((p) => p.category === selectedCategory);
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       <PageHeader
-        category="Portfolio & Architectural Concepts"
-        title="Demonstration Builds & Software Concepts"
-        description="Review our engineering blueprints and functional concept projects showcasing our design systems, full-stack architectures, and development standards."
-        currentPageName="Portfolio"
+        category={language === 'ar' ? 'معرض المشاريع والمخططات المعمارية' : 'Portfolio & Architectural Concepts'}
+        title={language === 'ar' ? 'مشاريع تجريبية ومفاهيم برمجية تطبيقية' : 'Demonstration Builds & Software Concepts'}
+        description={language === 'ar' ? 'استعرض مخططاتنا المعمارية والمشاريع الوظيفية التي تُبرز أنظمة التصميم لدينا وبنيتنا البرمجية الكاملة.' : 'Review our engineering blueprints and functional concept projects showcasing our design systems, full-stack architectures, and development standards.'}
+        currentPageName={t('nav.portfolio')}
         onNavigateHome={() => onNavigate('home')}
       />
 
@@ -66,10 +62,10 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
             </div>
             <div>
               <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
-                Engineering Blueprint Showcase
+                {language === 'ar' ? 'استعراض المخططات الهندسية' : 'Engineering Blueprint Showcase'}
               </span>
               <p className="text-xs text-slate-400 mt-0.5">
-                All projects below are functional concepts and architecture demonstrations created by Pixevo Technologies to showcase full-stack patterns.
+                {language === 'ar' ? 'جميع المشاريع أدناه هي مفاهيم برمجية ونماذج معمارية توضح معايير التطوير في بيكسيفو تكنولوجيز.' : 'All projects below are functional concepts and architecture demonstrations created by Pixevo Technologies to showcase full-stack patterns.'}
               </p>
             </div>
           </div>
@@ -78,7 +74,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
             onClick={() => onNavigate('contact')}
             className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full whitespace-nowrap transition-all shadow-md shadow-blue-900/20 cursor-pointer"
           >
-            Request Custom Prototype
+            {language === 'ar' ? 'طلب نموذج أولي مخصص' : 'Request Custom Prototype'}
           </button>
         </div>
 
@@ -89,7 +85,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
               key={cat}
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                selectedCategory === cat
+                selectedCategory === cat || (selectedCategory === 'All' && cat === 'الكل') || (selectedCategory === 'الكل' && cat === 'All')
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20'
                   : 'bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
               }`}
@@ -155,7 +151,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
                   className="w-full py-2.5 text-xs font-semibold text-blue-400 bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Eye className="w-4 h-4" />
-                  <span>Inspect Blueprint & Architecture</span>
+                  <span>{language === 'ar' ? 'معاينة المخطط والمعمارية' : 'Inspect Blueprint & Architecture'}</span>
                 </button>
               </div>
             </div>

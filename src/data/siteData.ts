@@ -8,6 +8,7 @@ import {
   BlogPost,
   FAQItem,
   TestimonialItem,
+  SuccessStoryItem,
 } from '../types';
 
 export const COMPANY_INFO = {
@@ -1266,45 +1267,73 @@ export const BLOG_POSTS: BlogPost[] = [
 export const FAQS_DATA: FAQItem[] = [
   {
     id: 'faq-1',
-    question: 'How long does a typical custom software or web development project take?',
+    question: 'What is your end-to-end software development process and sprint cadence?',
     answer:
-      'Project timelines vary based on scope and complexity. A focused MVP or custom web portal typically takes 4 to 8 weeks, while complex enterprise platforms or multi-platform mobile apps generally range from 8 to 16 weeks. We provide a detailed milestone roadmap with clear sprint deliverables during our initial planning phase.',
-    category: 'Development',
+      'We follow a structured 5-stage Agile development process: 1) Technical Discovery & Architecture Scoping (Week 1), 2) Interactive UI/UX Figma Prototyping (Weeks 1–2), 3) Sprint-based Engineering in 2-week agile cycles with live staging preview environments, 4) Automated CI/CD Testing & Security QA, and 5) Zero-Downtime Production Deployment with 30-day post-launch warranty.',
+    category: 'Process',
   },
   {
     id: 'faq-2',
-    question: 'Who owns the intellectual property (IP) and source code of the project?',
+    question: 'What core technology stacks and frameworks does Pixevo specialize in?',
     answer:
-      'You own 100% of the intellectual property, code repository, database schemas, and digital assets upon completion of payment. We provide full repository access from day one, and you are never locked in.',
-    category: 'Security & IP',
+      'Our primary engineering stack is centered on battle-tested, high-performance technologies: Frontend (React 19, Next.js 15, TypeScript, Tailwind CSS), Backend & Microservices (Node.js, Express, Python FastAPI / Django, Go, GraphQL/REST), Mobile (Flutter & React Native cross-platform apps for iOS & Android), Databases (PostgreSQL, MySQL, Redis, MongoDB, Supabase, Firebase), and Cloud DevOps (AWS, GCP, Docker, Kubernetes, GitHub Actions).',
+    category: 'Technology',
   },
   {
     id: 'faq-3',
-    question: 'How do we communicate and track progress during development?',
+    question: 'How long does a typical custom software, mobile app, or web project take?',
     answer:
-      'We believe in complete transparency. We conduct bi-weekly sprint reviews, provide you with access to private staging preview links, and maintain communication via your preferred channels (Slack, Microsoft Teams, or email) alongside structured milestone trackers.',
-    category: 'General',
+      'Project timelines depend on technical depth and scope: A focused MVP or rapid prototype takes 2 to 4 weeks; a full-featured custom web portal or mobile application typically requires 4 to 8 weeks; and complex enterprise SaaS systems or automated AI pipelines span 8 to 16 weeks. Every project begins with a clear milestone roadmap.',
+    category: 'Process',
   },
   {
     id: 'faq-4',
-    question: 'Do you provide maintenance and technical support after launch?',
+    question: 'Who owns the intellectual property (IP), source code, and assets?',
     answer:
-      'Yes. Every project includes a standard 30-day post-launch warranty period to resolve any unforeseen issues. Beyond launch, we offer flexible ongoing maintenance plans covering security patches, cloud server monitoring, database backups, and iterative feature enhancements.',
-    category: 'Pricing & Support',
+      'You own 100% of the intellectual property, code repositories, design files, database architectures, and API keys upon completion of payment. We transfer complete administrative credentials, and you have transparent access to the private Git repository from day one.',
+    category: 'Security & IP',
   },
   {
     id: 'faq-5',
-    question: 'Can you work with our existing codebase or internal development team?',
+    question: 'How do you engineer and integrate custom AI and LLM agents into products?',
     answer:
-      'Absolutely. We regularly collaborate with existing internal engineering teams, perform code audits, modernize legacy components, or augment development capacity to accelerate your feature roadmap.',
-    category: 'General',
+      'We build production-ready AI solutions using modern LLM APIs (such as Google Gemini, OpenAI), Retrieval-Augmented Generation (RAG) vector pipelines (Pinecone, ChromaDB, pgvector), computer vision systems, and autonomous workflow bots. All AI integrations adhere to strict data privacy standards without training public models on your proprietary data.',
+    category: 'Technology',
   },
   {
     id: 'faq-6',
-    question: 'What engagement and pricing models do you offer?',
+    question: 'How do we communicate, review deliverables, and track sprint progress?',
     answer:
-      'We offer flexible engagement models tailored to your project requirements: Fixed-Scope Projects for clearly defined deliverables, Dedicated Team / Sprint Retainers for evolving agile products, and Technical Consulting & Support on an hourly or monthly SLA basis.',
+      'We practice complete transparency through bi-weekly interactive sprint demonstration calls, shared Jira/Trello/Linear tracking boards, direct Slack or Microsoft Teams channels, and continuous staging URLs where your stakeholders can test working software at any time.',
+    category: 'Process',
+  },
+  {
+    id: 'faq-7',
+    question: 'Can you work with an existing codebase, legacy system, or internal team?',
+    answer:
+      'Yes. We regularly perform comprehensive code and security audits on existing applications, modernize legacy stacks into microservices, refactor monolithic backends, and augment in-house engineering teams to accelerate milestone velocity.',
+    category: 'Development',
+  },
+  {
+    id: 'faq-8',
+    question: 'What engagement models and payment structures do you support?',
+    answer:
+      'We support three flexible models: 1) Fixed-Scope Milestone Projects (predetermined deliverables, guaranteed timeline, milestone-based payments), 2) Dedicated Agile Sprint Teams (allocated senior engineers on monthly retainers), and 3) Technical Advisory & SLA Support (hourly or monthly maintenance retainers).',
     category: 'Pricing & Support',
+  },
+  {
+    id: 'faq-9',
+    question: 'What happens after launch? Do you provide ongoing maintenance and SLAs?',
+    answer:
+      'Every project includes an initial 30-day post-launch warranty for bug fixes and adjustments. We also offer ongoing Maintenance SLAs that include 24/7 cloud server monitoring, automated database backups, security patch updates, and prioritized feature enhancements.',
+    category: 'Pricing & Support',
+  },
+  {
+    id: 'faq-10',
+    question: 'How do you ensure enterprise security and data privacy across applications?',
+    answer:
+      'We enforce industry-standard security best practices including end-to-end data encryption in transit (TLS 1.3) and at rest (AES-256), strict Role-Based Access Control (RBAC), automated dependency vulnerability scanning, rate limiting, and compliance with GDPR/SOC2 security frameworks.',
+    category: 'Security & IP',
   },
 ];
 
@@ -1394,3 +1423,103 @@ export const TESTIMONIALS_DATA: TestimonialItem[] = [
     isPlaceholder: true,
   },
 ];
+
+export const SUCCESS_STORIES_DATA: SuccessStoryItem[] = [
+  {
+    id: 'story-aura-commerce',
+    title: 'Sub-Second Headless Commerce Transformation',
+    client: 'Aura Global Brands',
+    industry: 'E-Commerce & Digital Retail',
+    category: 'E-Commerce',
+    timeline: '6 Weeks Sprint Delivery',
+    badge: 'Flagship Migration',
+    problem:
+      'Legacy monolithic storefront suffered from 4.8s mobile page load times, high checkout abandonment (68%), and fragile multi-currency handling across 12 countries.',
+    solution:
+      'Re-architected into a modern headless Next.js 15 frontend powered by edge-rendered caching, localized Stripe checkout, and automated inventory sync with Shopify backend.',
+    keyMetrics: [
+      { label: 'Conversion Rate', value: '+240%', description: 'Mobile checkout completion' },
+      { label: 'Page Load (LCP)', value: '0.74s', description: 'Core Web Vitals rating 99' },
+      { label: 'Transaction Vol.', value: '$4.2M+', description: 'Processed in first 90 days' },
+    ],
+    technologies: ['Next.js 15', 'TypeScript', 'Tailwind CSS', 'Stripe API', 'Redis Edge', 'GraphQL'],
+    quote: {
+      text: 'Pixevo transformed our storefront from a sluggish bottleneck into our highest-converting commercial asset.',
+      author: 'Julian Thorne',
+      role: 'VP of Digital Commerce',
+    },
+  },
+  {
+    id: 'story-logitrack-fleet',
+    title: 'Real-Time Telematics & Dynamic Route Dispatch',
+    client: 'Apex Freight & Logistics',
+    industry: 'Logistics & Supply Chain',
+    category: 'Logistics & Fleet',
+    timeline: '8 Weeks End-to-End',
+    badge: 'Enterprise Platform',
+    problem:
+      'Manual dispatch routing via spreadsheets resulted in inaccurate customer ETAs, delayed driver handoffs, and 30+ daily dispute calls.',
+    solution:
+      'Engineered an event-driven dispatch platform with real-time GPS telemetry, PostGIS geospatial clustering, mobile digital signature capture, and automated customer SMS tracking.',
+    keyMetrics: [
+      { label: 'Dispatch Overhead', value: '-38%', description: 'Saved in route planning time' },
+      { label: 'ETA Accuracy', value: '99.8%', description: 'Within 5-minute window' },
+      { label: 'Active Routes', value: '12,500+', description: 'Dispatched monthly' },
+    ],
+    technologies: ['React', 'Node.js', 'PostgreSQL PostGIS', 'Socket.io', 'Google Maps API', 'Docker'],
+    quote: {
+      text: 'Our dispatchers and drivers immediately adopted the platform. The automated customer ETA updates alone saved hundreds of support hours.',
+      author: 'Sarah Jenkins',
+      role: 'Chief Technology Officer',
+    },
+  },
+  {
+    id: 'story-caresync-health',
+    title: 'HIPAA-Compliant Telehealth & Patient Portal',
+    client: 'CareSync Medical Network',
+    industry: 'Digital Healthcare',
+    category: 'Healthcare',
+    timeline: '10 Weeks Agile Build',
+    badge: 'Healthcare Security',
+    problem:
+      'Clinical staff faced 45-minute phone hold queues for basic appointment bookings and lab report retrievals across 6 regional clinics.',
+    solution:
+      'Developed a cross-platform mobile app (iOS & Android) with biometric authentication, automated calendar slot reservations, encrypted lab PDF distribution, and clinical messaging.',
+    keyMetrics: [
+      { label: 'Phone Wait Time', value: '-65%', description: 'Patient intake reduction' },
+      { label: 'Patient Adoption', value: '85,000+', description: 'Active registered users' },
+      { label: 'Compliance Audit', value: '100%', description: 'HIPAA & GDPR verified' },
+    ],
+    technologies: ['React Native', 'TypeScript', 'Python FastAPI', 'AES-256 Storage', 'AWS GovCloud', 'PostgreSQL'],
+    quote: {
+      text: 'Pixevo delivered a rock-solid, HIPAA-compliant patient experience that our medical team and patients trust every day.',
+      author: 'Dr. Marcus Vance',
+      role: 'Chief Medical Officer',
+    },
+  },
+  {
+    id: 'story-venture-analytics',
+    title: 'AI-Powered Financial Runway & Portfolio Modeling',
+    client: 'VentureScale Capital',
+    industry: 'Financial Technology (FinTech)',
+    category: 'FinTech & AI',
+    timeline: '5 Weeks Rapid MVP',
+    badge: 'FinTech Innovation',
+    problem:
+      'Founders and investors spent days reconciling fragmented accounting CSVs to generate burn projections and scenario forecasting models.',
+    solution:
+      'Constructed a high-speed analytical modeling engine utilizing vectorized compute, interactive 60fps D3 charts, direct banking API synchronization, and automated executive PDF exports.',
+    keyMetrics: [
+      { label: 'Modeling Velocity', value: '10x Faster', description: 'Real-time scenario updates' },
+      { label: 'Assets Monitored', value: '$120M+', description: 'Portfolio venture funds' },
+      { label: 'Render Latency', value: '< 45ms', description: 'Instant D3 visual recalculation' },
+    ],
+    technologies: ['FastAPI', 'Python', 'React', 'D3.js', 'TimescaleDB', 'Tailwind CSS'],
+    quote: {
+      text: 'The speed and clarity of the financial simulations gave our partners unprecedented visibility into portfolio cash-flows.',
+      author: 'Elena Rostova',
+      role: 'Head of Digital Operations',
+    },
+  },
+];
+

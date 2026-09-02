@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageId, JobPosition } from '../types';
-import { CAREERS_DATA, COMPANY_INFO } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
 import {
   Briefcase,
@@ -25,16 +25,40 @@ export const CareersPage: React.FC<CareersPageProps> = ({
   onNavigate,
   onApplyJob,
 }) => {
+  const { data, language, t } = useLanguage();
   const [departmentFilter, setDepartmentFilter] = useState<string>('All');
 
-  const departments = ['All', 'Engineering', 'Design', 'Consulting'];
+  const departments = language === 'ar'
+    ? ['الكل', 'الهندسة والبرمجة', 'التصميم وتجربة المستخدم', 'الاستشارات المعمارية']
+    : ['All', 'Engineering', 'Design', 'Consulting'];
 
   const filteredJobs =
-    departmentFilter === 'All'
-      ? CAREERS_DATA
-      : CAREERS_DATA.filter((j) => j.department === departmentFilter);
+    departmentFilter === 'All' || departmentFilter === 'الكل'
+      ? data.careers
+      : data.careers.filter((j) => j.department === departmentFilter);
 
-  const perks = [
+  const perks = language === 'ar' ? [
+    {
+      title: 'ثقافة العمل عن بُعد أولاً',
+      description: 'اعمل من أي مكان بساعات مرنة وتواصل حديث غير تزامني.',
+      icon: Laptop,
+    },
+    {
+      title: 'أحدث الحزم والتقنيات البرمجية',
+      description: 'اعمل بأحدث إصدارات TypeScript و React و Next.js و Node.js و Python والمنصات السحابية.',
+      icon: Code2,
+    },
+    {
+      title: 'التعلم المستمر والنمو المهني',
+      description: 'ميزانية سنوية للتعلم والشهادات الاحترافية للكتب والمسارات والمؤتمرات التقنية.',
+      icon: GraduationCap,
+    },
+    {
+      title: 'مشاريع عالمية ذات أثر ملموس',
+      description: 'ابنِ برمجيات حيوية لشركات ناشئة ومؤسسات ومشاريع رائدة حول العالم.',
+      icon: Globe2,
+    },
+  ] : [
     {
       title: 'Remote-First Culture',
       description: 'Work from anywhere with flexible hours and modern asynchronous communication.',
@@ -60,10 +84,10 @@ export const CareersPage: React.FC<CareersPageProps> = ({
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       <PageHeader
-        category="Careers at Pixevo Technologies"
-        title="Build High-Impact Digital Products with a Global Engineering Team"
-        description="Join our international team of software engineers, system architects, and UI/UX designers building scalable technology solutions for modern businesses."
-        currentPageName="Careers"
+        category={language === 'ar' ? 'الوظائف والفرص في بيكسيفو' : 'Careers at Pixevo Technologies'}
+        title={language === 'ar' ? 'ابنِ منتجات رقمية متقدمة مع فريق هندسي عالمي' : 'Build High-Impact Digital Products with a Global Engineering Team'}
+        description={language === 'ar' ? 'انضم إلى فريقنا الدولي من مهندسي البرمجيات والمعماريين ومصممي الواجهات لبناء حلول تقنية قابلة للتوسع.' : 'Join our international team of software engineers, system architects, and UI/UX designers building scalable technology solutions for modern businesses.'}
+        currentPageName={t('nav.careers')}
         onNavigateHome={() => onNavigate('home')}
       />
 
@@ -72,10 +96,10 @@ export const CareersPage: React.FC<CareersPageProps> = ({
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
-              Life at Pixevo
+              {language === 'ar' ? 'بيئة العمل في بيكسيفو' : 'Life at Pixevo'}
             </span>
             <h2 className="text-3xl font-bold font-['Outfit'] text-white">
-              Why Engineers & Designers Choose Pixevo
+              {language === 'ar' ? 'لماذا يختار المطورون والمصممون بيكسيفو؟' : 'Why Engineers & Designers Choose Pixevo'}
             </h2>
           </div>
 
@@ -107,10 +131,12 @@ export const CareersPage: React.FC<CareersPageProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider block">
-                Current Opportunities
+                {language === 'ar' ? 'الفرص الحالية المتاحة' : 'Current Opportunities'}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold font-['Outfit'] text-white">
-                Open Engineering & Design Positions ({CAREERS_DATA.length})
+                {language === 'ar'
+                  ? `الشواغر الهندسية والتصميمية المتاحة (${data.careers.length})`
+                  : `Open Engineering & Design Positions (${data.careers.length})`}
               </h2>
             </div>
 
@@ -121,7 +147,7 @@ export const CareersPage: React.FC<CareersPageProps> = ({
                   key={dept}
                   onClick={() => setDepartmentFilter(dept)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                    departmentFilter === dept
+                    departmentFilter === dept || (departmentFilter === 'All' && dept === 'الكل') || (departmentFilter === 'الكل' && dept === 'All')
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-900/20'
                       : 'bg-slate-950 text-slate-300 hover:bg-slate-900 border border-slate-800'
                   }`}
@@ -163,7 +189,7 @@ export const CareersPage: React.FC<CareersPageProps> = ({
                     onClick={() => onApplyJob(job)}
                     className="px-6 py-2.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-900/20 transition-all whitespace-nowrap cursor-pointer"
                   >
-                    Apply for this Role
+                    {language === 'ar' ? 'التقديم على هذه الوظيفة' : 'Apply for this Role'}
                   </button>
                 </div>
 
@@ -175,7 +201,7 @@ export const CareersPage: React.FC<CareersPageProps> = ({
                   {/* Responsibilities */}
                   <div className="space-y-2">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                      Primary Responsibilities
+                      {language === 'ar' ? 'المسؤوليات الرئيسية' : 'Primary Responsibilities'}
                     </span>
                     <ul className="space-y-1.5">
                       {job.responsibilities.map((resp, i) => (
@@ -190,7 +216,7 @@ export const CareersPage: React.FC<CareersPageProps> = ({
                   {/* Requirements */}
                   <div className="space-y-2">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                      Requirements & Experience
+                      {language === 'ar' ? 'المتطلبات والخبرات' : 'Requirements & Experience'}
                     </span>
                     <ul className="space-y-1.5">
                       {job.requirements.map((req, i) => (
@@ -205,7 +231,9 @@ export const CareersPage: React.FC<CareersPageProps> = ({
 
                 {/* Benefits */}
                 <div className="pt-3 border-t border-slate-800 flex flex-wrap gap-2 items-center">
-                  <span className="text-xs font-mono text-slate-400 mr-2">Benefits:</span>
+                  <span className="text-xs font-mono text-slate-400 mr-2">
+                    {language === 'ar' ? 'المزايا:' : 'Benefits:'}
+                  </span>
                   {job.benefits.map((b) => (
                     <span
                       key={b}
@@ -223,16 +251,18 @@ export const CareersPage: React.FC<CareersPageProps> = ({
         {/* General Application Banner */}
         <section className="p-8 sm:p-10 rounded-2xl bg-slate-900/40 border border-slate-800 text-center space-y-4">
           <h3 className="text-2xl font-bold font-['Outfit'] text-white">
-            Don't See an Exact Match for Your Skills?
+            {language === 'ar' ? 'لم تجد وظيفة تطابق خبرتك الحالية بالضبط؟' : "Don't See an Exact Match for Your Skills?"}
           </h3>
           <p className="text-slate-400 text-sm max-w-xl mx-auto">
-            We are always interested in connecting with passionate full-stack engineers, cloud architects, and UI/UX designers.
+            {language === 'ar'
+              ? 'يسعدنا دائماً التواصل والتعرف على مهندسي برمجيات ومعماريين ومصممي واجهات موهوبين وشغوفين.'
+              : 'We are always interested in connecting with passionate full-stack engineers, cloud architects, and UI/UX designers.'}
           </p>
           <button
             onClick={() => onNavigate('contact')}
             className="px-6 py-2.5 text-xs font-semibold text-white bg-slate-950 hover:bg-slate-900 rounded-full border border-slate-800 transition-all cursor-pointer"
           >
-            Send a General Application via Contact
+            {language === 'ar' ? 'إرسال طلب عام عبر صفحة التواصل' : 'Send a General Application via Contact'}
           </button>
         </section>
       </div>

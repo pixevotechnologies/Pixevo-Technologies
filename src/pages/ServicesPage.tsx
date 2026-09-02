@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
-import { SERVICES_DATA } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
+import { FAQSection } from '../components/FAQSection';
 import {
   Code2,
   Globe,
@@ -23,12 +24,15 @@ import {
 interface ServicesPageProps {
   onNavigate: (page: PageId) => void;
   onInquireService: (serviceName: string) => void;
+  onOpenEstimator?: () => void;
 }
 
 export const ServicesPage: React.FC<ServicesPageProps> = ({
   onNavigate,
   onInquireService,
+  onOpenEstimator,
 }) => {
+  const { data, language, t } = useLanguage();
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
 
   const getServiceIcon = (iconName: string) => {
@@ -58,15 +62,15 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     }
   };
 
-  const filteredServices = SERVICES_DATA;
+  const filteredServices = data.services;
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-16">
       <PageHeader
-        category="Comprehensive Engineering Services"
-        title="Custom Software, Mobile, Web & AI Solutions"
-        description="Explore our full spectrum of software development services designed to help businesses build scalable digital products, automate operations, and compete effectively."
-        currentPageName="Services"
+        category={language === 'ar' ? 'خدمات برمجية وهندسية متكاملة' : 'Comprehensive Engineering Services'}
+        title={language === 'ar' ? 'برمجيات مخصصة، تطبيقات، ويب وحلول الذكاء الاصطناعي' : 'Custom Software, Mobile, Web & AI Solutions'}
+        description={language === 'ar' ? 'استكشف باقة خدماتنا البرمجية المصممة لمساعدة المؤسسات على بناء منتجات رقمية قابلة للتوسع وأتمتة العمليات.' : 'Explore our full spectrum of software development services designed to help businesses build scalable digital products, automate operations, and compete effectively.'}
+        currentPageName={t('nav.services')}
         onNavigateHome={() => onNavigate('home')}
       />
 
@@ -87,7 +91,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                       <Icon className="w-6 h-6" />
                     </div>
                     <span className="text-xs font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded-md border border-slate-800">
-                      Service 0{index + 1}
+                      {language === 'ar' ? `الخدمة 0${index + 1}` : `Service 0${index + 1}`}
                     </span>
                   </div>
 
@@ -103,7 +107,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   {/* Core Capabilities */}
                   <div className="space-y-2 pt-2 border-t border-slate-800">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                      Key Capabilities
+                      {language === 'ar' ? 'القدرات والمزايا الرئيسية' : 'Key Capabilities'}
                     </span>
                     <ul className="space-y-2">
                       {service.features.map((feat, i) => (
@@ -118,7 +122,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   {/* Deliverables */}
                   <div className="space-y-2 pt-2 border-t border-slate-800">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">
-                      Typical Deliverables
+                      {language === 'ar' ? 'المخرجات والتسليمات' : 'Typical Deliverables'}
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {service.deliverables.map((deliv, i) => (
@@ -151,7 +155,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                     onClick={() => onInquireService(service.title)}
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-900/20 transition-all whitespace-nowrap cursor-pointer"
                   >
-                    <span>Inquire About Service</span>
+                    <span>{language === 'ar' ? 'طلب استفسار عن الخدمة' : 'Inquire About Service'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -160,21 +164,32 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
           })}
         </div>
 
+        {/* FAQ Section */}
+        <FAQSection
+          onNavigate={onNavigate}
+          onOpenEstimator={onOpenEstimator}
+          title={language === 'ar' ? 'الأسئلة الشائعة حول الخدمات والتقنيات' : 'Services & Technology FAQs'}
+          subtitle={language === 'ar' ? 'إجابات على أكثر الأسئلة شيوعاً حول البنية التحتية، التطوير، التطبيقات السحابية والدعم الفني.' : 'Answers to common questions regarding our custom engineering stacks, cloud architecture, mobile builds, and post-launch SLAs.'}
+          defaultCategory="Technology"
+        />
+
         {/* Custom Engineering Banner */}
         <section className="p-8 sm:p-10 rounded-2xl bg-slate-900/40 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2">
             <h3 className="text-2xl font-bold font-['Outfit'] text-white">
-              Need a Custom Multi-Disciplinary Software Solution?
+              {language === 'ar' ? 'هل تحتاج إلى حل برمجي مخصص ومتعدد التخصصات؟' : 'Need a Custom Multi-Disciplinary Software Solution?'}
             </h3>
             <p className="text-slate-400 text-sm max-w-xl">
-              Many business systems combine custom web portals, mobile apps, and automated AI pipelines. We can architect a unified solution tailored to your exact workflows.
+              {language === 'ar'
+                ? 'تجمع العديد من الأنظمة بين بوابات الويب، وتطبيقات الهواتف الذكية، وأتمتة الذكاء الاصطناعي. يمكننا تصميم وبناء نظام متكامل يلائم أعمالك بدقة.'
+                : 'Many business systems combine custom web portals, mobile apps, and automated AI pipelines. We can architect a unified solution tailored to your exact workflows.'}
             </p>
           </div>
           <button
             onClick={() => onNavigate('contact')}
             className="px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg shadow-blue-900/20 transition-all whitespace-nowrap cursor-pointer"
           >
-            Schedule a Technical Discovery Call
+            {language === 'ar' ? 'حجز جلسة استكشاف تقنية' : 'Schedule a Technical Discovery Call'}
           </button>
         </section>
       </div>

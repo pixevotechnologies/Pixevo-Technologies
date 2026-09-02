@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PROCESS_STEPS } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
 import {
   Compass,
   FileCode2,
@@ -17,18 +17,20 @@ interface InteractiveProcessProps {
 }
 
 export const InteractiveProcess: React.FC<InteractiveProcessProps> = ({ onStartProject }) => {
+  const { data, language } = useLanguage();
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
+  const steps = data.processSteps;
   const stepIcons = [Compass, FileCode2, Palette, Cpu, Rocket];
-  const currentStep = PROCESS_STEPS[activeStepIndex];
-  const StepIcon = stepIcons[activeStepIndex];
+  const currentStep = steps[activeStepIndex] || steps[0];
+  const StepIcon = stepIcons[activeStepIndex] || Compass;
 
   return (
     <div className="w-full space-y-8">
       {/* Step Numbers & Tabs Progress Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3">
-        {PROCESS_STEPS.map((step, idx) => {
-          const Icon = stepIcons[idx];
+        {steps.map((step, idx) => {
+          const Icon = stepIcons[idx] || Compass;
           const isActive = activeStepIndex === idx;
           const isCompleted = idx < activeStepIndex;
 
@@ -88,12 +90,12 @@ export const InteractiveProcess: React.FC<InteractiveProcessProps> = ({ onStartP
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-mono text-blue-400 uppercase tracking-wider">
-                    Phase {currentStep.number}
+                    {language === 'ar' ? `المرحلة ${currentStep.number}` : `Phase ${currentStep.number}`}
                   </span>
                   <span className="text-slate-600">•</span>
                   <span className="text-xs font-mono text-slate-400 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-blue-400" />
-                    <span>Est. {currentStep.durationEstimate}</span>
+                    <span>{language === 'ar' ? `المدة التقديرية: ${currentStep.durationEstimate}` : `Est. ${currentStep.durationEstimate}`}</span>
                   </span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-bold font-['Outfit'] text-white">
@@ -110,7 +112,7 @@ export const InteractiveProcess: React.FC<InteractiveProcessProps> = ({ onStartP
             <div className="space-y-3 pt-2">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                <span>Key Engineering Activities</span>
+                <span>{language === 'ar' ? 'الأنشطة الهندسية الأساسية' : 'Key Engineering Activities'}</span>
               </h4>
               <ul className="grid grid-cols-1 sm:grid-cols-1 gap-2.5">
                 {currentStep.keyActivities.map((act, i) => (
@@ -132,10 +134,10 @@ export const InteractiveProcess: React.FC<InteractiveProcessProps> = ({ onStartP
           <div className="lg:col-span-5 bg-slate-950 rounded-xl border border-slate-800 p-5 sm:p-6 space-y-4 shadow-inner">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <h4 className="text-sm font-bold text-white font-['Outfit']">
-                Phase Deliverables
+                {language === 'ar' ? 'مخرجات المرحلة' : 'Phase Deliverables'}
               </h4>
               <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                Verified Output
+                {language === 'ar' ? 'مخرجات معتمدة' : 'Verified Output'}
               </span>
             </div>
 
@@ -153,12 +155,16 @@ export const InteractiveProcess: React.FC<InteractiveProcessProps> = ({ onStartP
 
             {/* Next Step Quick Nav */}
             <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-              {activeStepIndex < PROCESS_STEPS.length - 1 ? (
+              {activeStepIndex < steps.length - 1 ? (
                 <button
                   onClick={() => setActiveStepIndex((prev) => prev + 1)}
                   className="w-full flex items-center justify-center gap-2 py-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-full transition-all cursor-pointer"
                 >
-                  <span>Next: Phase {PROCESS_STEPS[activeStepIndex + 1].number} ({PROCESS_STEPS[activeStepIndex + 1].title})</span>
+                  <span>
+                    {language === 'ar'
+                      ? `التالي: المرحلة ${steps[activeStepIndex + 1].number} (${steps[activeStepIndex + 1].title})`
+                      : `Next: Phase ${steps[activeStepIndex + 1].number} (${steps[activeStepIndex + 1].title})`}
+                  </span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               ) : (
@@ -166,7 +172,7 @@ export const InteractiveProcess: React.FC<InteractiveProcessProps> = ({ onStartP
                   onClick={onStartProject}
                   className="w-full flex items-center justify-center gap-2 py-2.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-900/20 transition-all cursor-pointer"
                 >
-                  <span>Start Your Project With Our Process</span>
+                  <span>{language === 'ar' ? 'ابدأ مشروعك وفق منهجيتنا' : 'Start Your Project With Our Process'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               )}

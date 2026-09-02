@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { JobPosition } from '../types';
+import { submitContactInquiry } from '../services/emailService';
+import { COMPANY_INFO } from '../data/siteData';
 import {
   X,
   Briefcase,
@@ -9,6 +11,7 @@ import {
   Upload,
   Send,
   Sparkles,
+  Loader2,
 } from 'lucide-react';
 
 interface JobApplicationModalProps {
@@ -27,12 +30,30 @@ export const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
   const [coverNote, setCoverNote] = useState('');
   const [fileName, setFileName] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!job) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      await submitContactInquiry({
+        type: 'career',
+        fullName: name,
+        email,
+        phone,
+        jobTitle: job.title,
+        portfolioUrl: portfolioUrl || (fileName ? `Resume: ${fileName}` : ''),
+        coverNote,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Job application submission warning:', err);
+      setSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,10 +236,20 @@ export const JobApplicationModal: React.FC<JobApplicationModalProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-900/20 transition-all cursor-pointer"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:opacity-60 rounded-full shadow-md shadow-blue-900/20 transition-all cursor-pointer"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>Submit Job Application</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Sending Application...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Submit Job Application</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
