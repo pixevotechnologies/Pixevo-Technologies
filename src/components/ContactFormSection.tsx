@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ContactFormData } from '../types';
 import { COMPANY_INFO, SERVICES_DATA } from '../data/siteData';
+import { useTheme } from '../context/ThemeContext';
 import {
   submitContactInquiry,
   generateDirectMailtoUrl,
@@ -27,6 +28,14 @@ import {
   Facebook,
   Loader2,
   ExternalLink,
+  Code2,
+  Globe,
+  Smartphone,
+  Bot,
+  Palette,
+  Cloud,
+  Layers,
+  Briefcase,
 } from 'lucide-react';
 
 interface ContactFormSectionProps {
@@ -140,6 +149,22 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
   // Client-side real-time validation state
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<FormTouched>({});
+
+  const { isDark } = useTheme();
+
+  const selectOptionStyle: React.CSSProperties = {
+    backgroundColor: isDark ? '#0f172a' : '#ffffff',
+    color: isDark ? '#f8fafc' : '#0f172a',
+  };
+
+  const quickServices = [
+    { title: 'Custom Software Development', label: 'Custom Software', icon: Code2 },
+    { title: 'Web Development', label: 'Web Development', icon: Globe },
+    { title: 'Mobile App Development', label: 'Mobile Apps', icon: Smartphone },
+    { title: 'AI & Automation Solutions', label: 'AI & Automation', icon: Bot },
+    { title: 'Cloud & API Integration', label: 'Cloud & APIs', icon: Cloud },
+    { title: 'UI/UX Design', label: 'UI/UX Design', icon: Palette },
+  ];
 
   useEffect(() => {
     if (prefill) {
@@ -501,18 +526,18 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                 </p>
               </div>
 
-              <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 text-left text-xs space-y-2 max-w-lg mx-auto">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                  <span className="text-slate-400">Target Service:</span>
-                  <span className="font-semibold text-white">{formData.serviceRequired}</span>
+              <div className="bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-left text-xs space-y-2 max-w-lg mx-auto">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-600 dark:text-slate-400">Target Service:</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">{formData.serviceRequired}</span>
                 </div>
-                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                  <span className="text-slate-400">Budget Range:</span>
-                  <span className="font-semibold text-emerald-400">{formData.budget}</span>
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-600 dark:text-slate-400">Budget Range:</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formData.budget}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Follow-up Destination:</span>
-                  <span className="font-semibold text-blue-400 truncate max-w-[200px]">{formData.email}</span>
+                  <span className="text-slate-600 dark:text-slate-400">Follow-up Destination:</span>
+                  <span className="font-semibold text-blue-600 dark:text-blue-400 truncate max-w-[200px]">{formData.email}</span>
                 </div>
               </div>
 
@@ -631,12 +656,13 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         id="contact-callTime"
                         value={callTime}
                         onChange={(e) => setCallTime(e.target.value)}
+                        style={selectOptionStyle}
                         className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                       >
-                        <option value="10:00 UTC">10:00 AM UTC (Morning)</option>
-                        <option value="14:00 UTC">02:00 PM UTC (Afternoon)</option>
-                        <option value="17:00 UTC">05:00 PM UTC (Late Afternoon)</option>
-                        <option value="20:00 UTC">08:00 PM UTC (Evening)</option>
+                        <option value="10:00 UTC" style={selectOptionStyle}>10:00 AM UTC (Morning)</option>
+                        <option value="14:00 UTC" style={selectOptionStyle}>02:00 PM UTC (Afternoon)</option>
+                        <option value="17:00 UTC" style={selectOptionStyle}>05:00 PM UTC (Late Afternoon)</option>
+                        <option value="20:00 UTC" style={selectOptionStyle}>08:00 PM UTC (Evening)</option>
                       </select>
                     </div>
                   </div>
@@ -823,31 +849,67 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                 </div>
               </div>
 
-              {/* Service Required & Budget */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="contact-service" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1.5">
+              {/* Service Required & Interactive Service Selection */}
+              <div className="space-y-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-1.5">
+                  <label htmlFor="contact-service" className="block text-xs font-semibold text-slate-800 dark:text-slate-300">
                     Primary Service Required <span className="text-blue-500 dark:text-blue-400">*</span>
                   </label>
-                  <select
-                    id="contact-service"
-                    value={formData.serviceRequired}
-                    onChange={(e) =>
-                      setFormData({ ...formData, serviceRequired: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
-                  >
+                  <span className="text-[11px] font-mono text-blue-600 dark:text-blue-400 font-medium">
+                    Active: <strong className="font-semibold">{formData.serviceRequired}</strong>
+                  </span>
+                </div>
+
+                {/* Visual Quick-Select Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {quickServices.map((srv) => {
+                    const isSelected = formData.serviceRequired === srv.title;
+                    const IconComp = srv.icon;
+                    return (
+                      <button
+                        key={srv.title}
+                        type="button"
+                        onClick={() => handleFieldChange('serviceRequired', srv.title)}
+                        className={`p-2 rounded-lg border text-left text-xs transition-all flex items-center gap-2 cursor-pointer ${
+                          isSelected
+                            ? 'bg-blue-50 dark:bg-blue-950/60 border-blue-500 text-blue-700 dark:text-blue-300 font-semibold shadow-sm ring-1 ring-blue-500/30'
+                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-850'
+                        }`}
+                      >
+                        <div className={`p-1 rounded shrink-0 ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
+                          <IconComp className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="truncate">{srv.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Dropdown for All Services & Custom Scope */}
+                <select
+                  id="contact-service"
+                  value={formData.serviceRequired}
+                  onChange={(e) => handleFieldChange('serviceRequired', e.target.value)}
+                  style={selectOptionStyle}
+                  className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer font-medium"
+                >
+                  <optgroup label="Core Engineering Services" style={selectOptionStyle}>
                     {SERVICES_DATA.map((srv) => (
-                      <option key={srv.id} value={srv.title}>
+                      <option key={srv.id} value={srv.title} style={selectOptionStyle}>
                         {srv.title}
                       </option>
                     ))}
-                    <option value="Multiple Services / Comprehensive Build">
+                  </optgroup>
+                  <optgroup label="Comprehensive Packages" style={selectOptionStyle}>
+                    <option value="Multiple Services / Comprehensive Build" style={selectOptionStyle}>
                       Multiple Services / Comprehensive Build
                     </option>
-                  </select>
-                </div>
+                  </optgroup>
+                </select>
+              </div>
 
+              {/* Budget Range & Timeline */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="contact-budget" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1.5">
                     Estimated Budget Range <span className="text-blue-500 dark:text-blue-400">*</span>
@@ -855,14 +917,32 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                   <select
                     id="contact-budget"
                     value={formData.budget}
-                    onChange={(e) =>
-                      setFormData({ ...formData, budget: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                    onChange={(e) => handleFieldChange('budget', e.target.value)}
+                    style={selectOptionStyle}
+                    className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer font-medium"
                   >
                     {budgetRanges.map((b) => (
-                      <option key={b} value={b}>
+                      <option key={b} value={b} style={selectOptionStyle}>
                         {b}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="contact-timeline" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1.5">
+                    Expected Timeline <span className="text-blue-500 dark:text-blue-400">*</span>
+                  </label>
+                  <select
+                    id="contact-timeline"
+                    value={formData.timeline}
+                    onChange={(e) => handleFieldChange('timeline', e.target.value)}
+                    style={selectOptionStyle}
+                    className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer font-medium"
+                  >
+                    {timelineOptions.map((t) => (
+                      <option key={t} value={t} style={selectOptionStyle}>
+                        {t}
                       </option>
                     ))}
                   </select>

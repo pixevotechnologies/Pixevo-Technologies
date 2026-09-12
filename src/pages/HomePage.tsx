@@ -1,18 +1,9 @@
 import React from 'react';
 import { PageId, ProjectItem } from '../types';
-import {
-  PORTFOLIO_DATA,
-  BLOG_POSTS,
-} from '../data/siteData';
+import { PORTFOLIO_DATA } from '../data/siteData';
 import { useLanguage } from '../context/LanguageContext';
 import { HeroVisual } from '../components/HeroVisual';
 import { InteractiveProcess } from '../components/InteractiveProcess';
-import { InteractiveTechStack } from '../components/InteractiveTechStack';
-import { InteractiveTransformation } from '../components/InteractiveTransformation';
-import { LiveArchitectureDashboard } from '../components/LiveArchitectureDashboard';
-import { InteractiveServiceShowcase } from '../components/InteractiveServiceShowcase';
-import { ModernEcommerceCaseStudy } from '../components/ModernEcommerceCaseStudy';
-import { SuccessStoriesSection } from '../components/SuccessStoriesSection';
 import { TestimonialSection } from '../components/TestimonialSection';
 import { FAQSection } from '../components/FAQSection';
 import { ContactFormSection } from '../components/ContactFormSection';
@@ -32,29 +23,8 @@ import {
   RefreshCw,
   Headphones,
   CheckCircle2,
-  KanbanSquare,
-  UserCheck,
-  GitMerge,
-  ShoppingCart,
-  FolderKanban,
-  ShieldCheck,
-  BarChart3,
-  Network,
-  Hammer,
-  Building2,
-  Store,
-  ShoppingBag,
-  GraduationCap,
-  Activity,
-  Landmark,
-  Truck,
-  Rocket,
   ChevronRight,
   Eye,
-  Calendar,
-  Clock,
-  Layers,
-  Cpu,
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -95,60 +65,6 @@ export const HomePage: React.FC<HomePageProps> = ({
         return Headphones;
       default:
         return Code2;
-    }
-  };
-
-  // Industry icon resolver
-  const getIndustryIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Hammer':
-        return Hammer;
-      case 'Building2':
-        return Building2;
-      case 'Store':
-        return Store;
-      case 'ShoppingBag':
-        return ShoppingBag;
-      case 'GraduationCap':
-        return GraduationCap;
-      case 'Activity':
-        return Activity;
-      case 'Landmark':
-        return Landmark;
-      case 'Truck':
-        return Truck;
-      case 'Briefcase':
-        return Briefcase;
-      case 'Rocket':
-        return Rocket;
-      default:
-        return Layers;
-    }
-  };
-
-  // Solution icon resolver
-  const getSolutionIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'KanbanSquare':
-        return KanbanSquare;
-      case 'UserCheck':
-        return UserCheck;
-      case 'GitMerge':
-        return GitMerge;
-      case 'ShoppingCart':
-        return ShoppingCart;
-      case 'FolderKanban':
-        return FolderKanban;
-      case 'ShieldCheck':
-        return ShieldCheck;
-      case 'Sparkles':
-        return Sparkles;
-      case 'BarChart3':
-        return BarChart3;
-      case 'Network':
-        return Network;
-      default:
-        return Cpu;
     }
   };
 
@@ -231,32 +147,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       <ScrollReveal direction="up" delay={100}>
         <ClientTrust />
       </ScrollReveal>
-
-      {/* 3. TRUST / VALUE SECTION */}
-      <section id="trust-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {data.trustPillars.map((pillar, idx) => (
-            <ScrollReveal
-              key={pillar.title}
-              direction="up"
-              delay={idx * 100}
-              className="h-full"
-            >
-              <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl flex flex-col gap-3 group transition-all hover:bg-slate-800/60 hover:border-slate-700 h-full">
-                <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 group-hover:bg-blue-500/30 transition-colors">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
-                <h2 className="text-base font-bold font-['Outfit'] text-white group-hover:text-blue-300 transition-colors">
-                  {pillar.title}
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                  {pillar.description}
-                </p>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </section>
 
       {/* 3. CORE SERVICES SECTION */}
       <section id="services-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -350,217 +240,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 3B. INTERACTIVE SERVICE CAPABILITIES SHOWCASE & UI MOCKUPS */}
-      <ScrollReveal direction="up" delay={100}>
-        <InteractiveServiceShowcase
-          onNavigate={onNavigate}
-          onOpenEstimator={onOpenEstimator}
-        />
-      </ScrollReveal>
-
-      {/* 4. WHY PIXEVO SECTION */}
-      <section id="why-pixevo-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl bg-slate-900/40 border border-slate-800 p-8 sm:p-12 lg:p-14 space-y-12">
-          <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{t('why.badge')}</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-white tracking-tight">
-              {t('why.title')}
-            </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              {t('why.desc')}
-            </p>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.whyPixevo.map((point, idx) => (
-              <ScrollReveal
-                key={point.title}
-                direction="up"
-                delay={idx * 80}
-                className="h-full"
-              >
-                <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-slate-700 space-y-3 transition-all hover:-translate-y-1 duration-200 h-full">
-                  <div className="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-base font-bold font-['Outfit'] text-white">
-                    {point.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    {point.description}
-                  </p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-
-          {/* Quick CTA inside Why Pixevo */}
-          <div className="pt-4 text-center">
-            <button
-              onClick={() => onNavigate('contact')}
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg shadow-blue-900/20 transition-all cursor-pointer hover:scale-105"
-            >
-              <span>{t('services.cta.contact')}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 4B. BEFORE & AFTER TRANSFORMATION SHOWCASE */}
-      <ScrollReveal direction="up">
-        <InteractiveTransformation onExploreServices={() => onNavigate('contact')} />
-      </ScrollReveal>
-
-      {/* 5. INTERACTIVE TECHNOLOGY STACK EXPLORER */}
-      <section id="tech-stack-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
-            <Cpu className="w-3.5 h-3.5" />
-            <span>Modern Technology Standards</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-white tracking-tight">
-            Our Core Technology Stack
-          </h2>
-          <p className="text-slate-400 text-sm">
-            We use proven, scalable frameworks and cloud technologies to ensure high performance, security, and long-term maintainability.
-          </p>
-        </ScrollReveal>
-
-        <ScrollReveal direction="up" delay={150}>
-          <InteractiveTechStack />
-        </ScrollReveal>
-      </section>
-
-      {/* 5B. LIVE ARCHITECTURE TELEMETRY DASHBOARD */}
-      <ScrollReveal direction="up" delay={100}>
-        <LiveArchitectureDashboard />
-      </ScrollReveal>
-
-      {/* 6. BUSINESS SOLUTIONS SECTION */}
-      <section id="solutions-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <ScrollReveal direction="up" className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold uppercase tracking-wider font-mono">
-              <Layers className="w-3.5 h-3.5" />
-              <span>{t('solutions.badge')}</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-white tracking-tight">
-              {t('solutions.title')}
-            </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              {t('solutions.desc')}
-            </p>
-          </div>
-
-          <button
-            onClick={() => onNavigate('solutions')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-indigo-400 hover:text-white bg-indigo-500/10 hover:bg-indigo-600/30 border border-indigo-500/30 rounded-full transition-all w-fit cursor-pointer"
-          >
-            <span>{t('solutions.cta.all')}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </ScrollReveal>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.solutions.slice(0, 6).map((sol, idx) => {
-            const Icon = getSolutionIcon(sol.iconName);
-            return (
-              <ScrollReveal
-                key={sol.id}
-                direction="up"
-                delay={idx * 80}
-                className="h-full"
-              >
-                <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-slate-700 hover:bg-slate-800/60 transition-all flex flex-col justify-between group h-full">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
-                        {sol.category}
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg font-bold font-['Outfit'] text-white group-hover:text-indigo-300 transition-colors">
-                      {sol.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                      {sol.shortDesc}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-400 font-mono">
-                      {sol.keyModules.length} {t('solutions.modules')}
-                    </span>
-                    <button
-                      onClick={() => onNavigate('solutions')}
-                      className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>{t('solutions.view')}</span>
-                      <ChevronRight className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </ScrollReveal>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 7. INDUSTRIES SECTION */}
-      <section id="industries-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
-            <Building2 className="w-3.5 h-3.5" />
-            <span>{t('industries.badge')}</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-white tracking-tight">
-            {t('industries.title')}
-          </h2>
-          <p className="text-slate-400 text-sm">
-            {t('industries.desc')}
-          </p>
-        </ScrollReveal>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-          {data.industries.map((ind, idx) => {
-            const Icon = getIndustryIcon(ind.iconName);
-            return (
-              <ScrollReveal
-                key={ind.id}
-                direction="up"
-                delay={idx * 40}
-                className="h-full"
-              >
-                <button
-                  onClick={() => onNavigate('industries')}
-                  className="group text-left p-4 rounded-xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/60 transition-all flex flex-col justify-between h-full w-full cursor-pointer"
-                >
-                  <div className="space-y-2.5">
-                    <div className="w-9 h-9 rounded-lg bg-blue-500/20 text-blue-400 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-all">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <h3 className="text-sm font-bold font-['Outfit'] text-white group-hover:text-blue-300 transition-colors">
-                      {ind.name}
-                    </h3>
-                  </div>
-                  <span className="text-[10px] text-slate-400 group-hover:text-slate-300 mt-2 block font-mono">
-                    {t('industries.explore')} →
-                  </span>
-                </button>
-              </ScrollReveal>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 8. OUR 5-STEP PROCESS */}
+      {/* 4. OUR 5-STEP PROCESS */}
       <section id="process-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
@@ -580,15 +260,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </ScrollReveal>
       </section>
 
-      {/* 8B. FEATURED CASE STUDY: MODERN E-COMMERCE PLATFORM */}
-      <ScrollReveal direction="up" delay={100}>
-        <ModernEcommerceCaseStudy
-          onNavigate={onNavigate}
-          onOpenEstimator={onOpenEstimator}
-        />
-      </ScrollReveal>
-
-      {/* 9. PORTFOLIO / CONCEPTS SECTION */}
+      {/* 5. PORTFOLIO / FEATURED WORK */}
       <section id="portfolio-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <ScrollReveal direction="up" className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
@@ -667,20 +339,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 9B. SUCCESS STORIES & MEASURABLE OUTCOMES */}
-      <section id="success-stories-home-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal direction="up">
-          <SuccessStoriesSection
-            onNavigate={onNavigate}
-            onOpenEstimator={onOpenEstimator}
-            onInquireProject={(serviceName) => {
-              onNavigate('contact');
-            }}
-          />
-        </ScrollReveal>
-      </section>
-
-      {/* 10. ENGAGEMENT MODELS */}
+      {/* 6. ENGAGEMENT MODELS */}
       <section id="engagement-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
@@ -737,14 +396,14 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 11. CLIENT TESTIMONIALS & FEEDBACK (FRAMER MOTION CYCLING) */}
+      {/* 7. CLIENT TESTIMONIALS */}
       <section id="testimonials-home-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal direction="up">
           <TestimonialSection onNavigate={onNavigate} />
         </ScrollReveal>
       </section>
 
-      {/* 12. FREQUENTLY ASKED QUESTIONS (SDLC & PRICING MODELS) */}
+      {/* 8. FREQUENTLY ASKED QUESTIONS */}
       <section id="home-faq-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal direction="up">
           <FAQSection
@@ -758,72 +417,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </ScrollReveal>
       </section>
 
-      {/* 13. BLOG / INSIGHTS PREVIEW */}
-      <section id="insights-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <ScrollReveal direction="up" className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{t('blog.badge')}</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-white tracking-tight">
-              {t('blog.title')}
-            </h2>
-            <p className="text-slate-400 text-sm">
-              {t('blog.desc')}
-            </p>
-          </div>
-
-          <button
-            onClick={() => onNavigate('blog')}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-white cursor-pointer"
-          >
-            <span>{t('blog.cta.all')}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </ScrollReveal>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {BLOG_POSTS.slice(0, 2).map((post, idx) => (
-            <ScrollReveal
-              key={post.id}
-              direction="up"
-              delay={idx * 120}
-              className="h-full"
-            >
-              <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/60 space-y-4 flex flex-col justify-between group transition-all h-full">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-semibold">
-                      {post.category}
-                    </span>
-                    <span>•</span>
-                    <span>{post.readTime}</span>
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-bold font-['Outfit'] text-white group-hover:text-blue-300 transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                  <span>By {post.author.name}</span>
-                  <button
-                    onClick={() => onNavigate('blog')}
-                    className="font-semibold text-blue-400 hover:text-white cursor-pointer"
-                  >
-                    {t('blog.read')} →
-                  </button>
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </section>
-
-      {/* 14. BOTTOM CONTACT SECTION */}
+      {/* 9. BOTTOM CONTACT & DISCOVERY CALL SECTION */}
       <section id="home-contact-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal direction="up">
           <ContactFormSection

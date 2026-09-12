@@ -239,7 +239,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenEstimator }) =
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold font-['Outfit'] tracking-tight text-white group-hover:text-blue-400 transition-colors uppercase">
-                  {companyInfo.name} <span className="text-blue-400 font-light">{language === 'ar' ? '' : 'Technologies'}</span>
+                  Pixevo <span className="text-blue-400 font-light">{language === 'ar' ? '' : 'Technologies'}</span>
                 </span>
                 <span className="text-[10px] tracking-wider uppercase font-semibold text-slate-400 font-mono">
                   {companyInfo.tagline}

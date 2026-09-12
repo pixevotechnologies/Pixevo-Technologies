@@ -1267,101 +1267,45 @@ export const BLOG_POSTS: BlogPost[] = [
 export const FAQS_DATA: FAQItem[] = [
   {
     id: 'faq-1',
-    question: 'What is your end-to-end software development process and sprint cadence?',
+    question: 'What core technology stacks and services does Pixevo specialize in?',
     answer:
-      'We follow a structured 5-stage Agile development process: 1) Technical Discovery & Architecture Scoping (Week 1), 2) Interactive UI/UX Figma Prototyping (Weeks 1–2), 3) Sprint-based Engineering in 2-week agile cycles with live staging preview environments, 4) Automated CI/CD Testing & Security QA, and 5) Zero-Downtime Production Deployment with 30-day post-launch warranty.',
-    category: 'Process',
-  },
-  {
-    id: 'faq-2',
-    question: 'What core technology stacks and frameworks does Pixevo specialize in?',
-    answer:
-      'Our primary engineering stack is centered on battle-tested, high-performance technologies: Frontend (React 19, Next.js 15, TypeScript, Tailwind CSS), Backend & Microservices (Node.js, Express, Python FastAPI / Django, Go, GraphQL/REST), Mobile (Flutter & React Native cross-platform apps for iOS & Android), Databases (PostgreSQL, MySQL, Redis, MongoDB, Supabase, Firebase), and Cloud DevOps (AWS, GCP, Docker, Kubernetes, GitHub Actions).',
+      'We engineer production-grade web platforms, mobile apps, and custom software using modern stacks: Frontend (React, Next.js, TypeScript, Tailwind CSS), Backend & APIs (Node.js, Express, Python FastAPI, PostgreSQL, Redis), Mobile (Flutter and React Native for iOS & Android), and Cloud Infrastructure (AWS, Google Cloud, Docker, CI/CD pipelines).',
     category: 'Technology',
   },
   {
-    id: 'faq-3',
-    question: 'How long does a typical custom software, mobile app, or web project take?',
+    id: 'faq-2',
+    question: 'How long does a typical software development project take from start to finish?',
     answer:
-      'Project timelines depend on technical depth and scope: A focused MVP or rapid prototype takes 2 to 4 weeks; a full-featured custom web portal or mobile application typically requires 4 to 8 weeks; and complex enterprise SaaS systems or automated AI pipelines span 8 to 16 weeks. Every project begins with a clear milestone roadmap.',
+      'Timelines vary based on technical scope: Focused MVPs and rapid prototypes take 2 to 4 weeks; full-featured custom web or mobile applications typically require 4 to 8 weeks; and complex enterprise platforms or custom AI integrations span 8 to 14 weeks. Every project follows a clear milestone roadmap with weekly progress demos.',
     category: 'Process',
+  },
+  {
+    id: 'faq-3',
+    question: 'What pricing and engagement models do you offer?',
+    answer:
+      'We offer three transparent engagement models: 1) Fixed-Scope Milestone Contracts with guaranteed deliverables and set budgets for clear requirements, 2) Dedicated Agile Sprint Teams for ongoing product evolution, and 3) Technical Advisory & Monthly Maintenance SLAs for reliable long-term support.',
+    category: 'Pricing & Support',
   },
   {
     id: 'faq-4',
     question: 'Who owns the intellectual property (IP), source code, and assets?',
     answer:
-      'You own 100% of the intellectual property, code repositories, design files, database architectures, and API keys upon completion of payment. We transfer complete administrative credentials, and you have transparent access to the private Git repository from day one.',
+      'You own 100% of all intellectual property, source code repositories, databases, design files, and documentation. You receive full administrative credentials upon completion, and you have direct access to private Git repositories from day one.',
     category: 'Security & IP',
   },
   {
     id: 'faq-5',
-    question: 'How do you engineer and integrate custom AI and LLM agents into products?',
+    question: 'How do we communicate and track sprint progress during development?',
     answer:
-      'We build production-ready AI solutions using modern LLM APIs (such as Google Gemini, OpenAI), Retrieval-Augmented Generation (RAG) vector pipelines (Pinecone, ChromaDB, pgvector), computer vision systems, and autonomous workflow bots. All AI integrations adhere to strict data privacy standards without training public models on your proprietary data.',
-    category: 'Technology',
+      'We ensure continuous transparency through bi-weekly interactive sprint demonstration calls, shared Jira/Linear tracking boards, direct Slack/WhatsApp channels, and live staging URLs where your team can review and test working builds at any time.',
+    category: 'Process',
   },
   {
     id: 'faq-6',
-    question: 'How do we communicate, review deliverables, and track sprint progress?',
+    question: 'Do you provide warranty and ongoing maintenance after product launch?',
     answer:
-      'We practice complete transparency through bi-weekly interactive sprint demonstration calls, shared Jira/Trello/Linear tracking boards, direct Slack or Microsoft Teams channels, and continuous staging URLs where your stakeholders can test working software at any time.',
-    category: 'Process',
-  },
-  {
-    id: 'faq-7',
-    question: 'Can you work with an existing codebase, legacy system, or internal team?',
-    answer:
-      'Yes. We regularly perform comprehensive code and security audits on existing applications, modernize legacy stacks into microservices, refactor monolithic backends, and augment in-house engineering teams to accelerate milestone velocity.',
-    category: 'Development',
-  },
-  {
-    id: 'faq-8',
-    question: 'What engagement models and payment structures do you support?',
-    answer:
-      'We support three flexible models: 1) Fixed-Scope Milestone Projects (predetermined deliverables, guaranteed timeline, milestone-based payments), 2) Dedicated Agile Sprint Teams (allocated senior engineers on monthly retainers), and 3) Technical Advisory & SLA Support (hourly or monthly maintenance retainers).',
+      'Yes. Every delivered project includes a complimentary 30-day post-launch warranty for bug fixes and stabilization. We also provide ongoing Maintenance SLAs covering 24/7 uptime monitoring, security patching, automated backups, and prioritized feature updates.',
     category: 'Pricing & Support',
-  },
-  {
-    id: 'faq-9',
-    question: 'What happens after launch? Do you provide ongoing maintenance and SLAs?',
-    answer:
-      'Every project includes an initial 30-day post-launch warranty for bug fixes and adjustments. We also offer ongoing Maintenance SLAs that include 24/7 cloud server monitoring, automated database backups, security patch updates, and prioritized feature enhancements.',
-    category: 'Pricing & Support',
-  },
-  {
-    id: 'faq-10',
-    question: 'How do you ensure enterprise security and data privacy across applications?',
-    answer:
-      'We enforce industry-standard security best practices including end-to-end data encryption in transit (TLS 1.3) and at rest (AES-256), strict Role-Based Access Control (RBAC), automated dependency vulnerability scanning, rate limiting, and compliance with GDPR/SOC2 security frameworks.',
-    category: 'Security & IP',
-  },
-  {
-    id: 'faq-11',
-    question: 'How do you handle scope changes or new feature requests during an active sprint?',
-    answer:
-      'In our agile lifecycle, requirements evolve naturally as users provide feedback. For Dedicated Teams, you can reprioritize the backlog at every 2-week sprint boundary with zero penalty. For Fixed-Scope projects, new requests are evaluated via a transparent Change Request (CR) process with an upfront timeline and cost estimate provided before any work begins, keeping the core milestone schedule safe.',
-    category: 'Process',
-  },
-  {
-    id: 'faq-12',
-    question: 'Are there any hidden costs, cloud hosting markups, or recurring licensing fees?',
-    answer:
-      'No. We practice 100% financial transparency. All cloud hosting (AWS, GCP, Supabase, Vercel) and third-party APIs (Stripe, Twilio, Gemini) are set up directly inside your organization’s own cloud accounts so you pay direct vendor rates with zero markup. Pixevo never charges proprietary licensing fees for custom code written for your project.',
-    category: 'Pricing & Support',
-  },
-  {
-    id: 'faq-13',
-    question: 'How do payment milestone disbursements work for fixed-scope projects?',
-    answer:
-      'Fixed-scope projects follow a clear, deliverable-backed payment schedule: 1) 30% initial deposit upon architectural sign-off and project kickoff, 2) 25% upon approval of interactive UI/UX Figma prototypes and database schema design, 3) 25% upon feature delivery on staging preview servers for acceptance testing, and 4) 20% upon final production deployment, code transfer, and handover.',
-    category: 'Pricing & Support',
-  },
-  {
-    id: 'faq-14',
-    question: 'What is your automated QA testing and code review protocol before releases?',
-    answer:
-      'Every code change undergoes mandatory peer review by a senior architect and must pass automated CI/CD pipelines including strict TypeScript compilation, ESLint validation, and automated unit/integration test suites. Before each client sprint review, our dedicated QA team performs responsive cross-device verification and security regression tests on staging environments.',
-    category: 'Development',
   },
 ];
 

@@ -43,11 +43,10 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
 
   const categories = [
     { id: 'All', label: language === 'ar' ? 'الكل' : 'All' },
-    { id: 'Process', label: language === 'ar' ? 'دورة التطوير (SDLC)' : 'SDLC & Process' },
-    { id: 'Pricing & Support', label: language === 'ar' ? 'نماذج الأسعار والتعاقد' : 'Pricing Models' },
-    { id: 'Development', label: language === 'ar' ? 'الهندسة وضمان الجودة' : 'Engineering & QA' },
-    { id: 'Technology', label: language === 'ar' ? 'التقنيات والذكاء الاصطناعي' : 'Tech & AI' },
-    { id: 'Security & IP', label: language === 'ar' ? 'الأمان وحقوق الملكية' : 'Security & IP' },
+    { id: 'Technology', label: language === 'ar' ? 'التقنيات وحلول البرمجيات' : 'Tech & Stacks' },
+    { id: 'Process', label: language === 'ar' ? 'مراحل التطوير والتسليم' : 'Process & Timelines' },
+    { id: 'Pricing & Support', label: language === 'ar' ? 'نماذج الأسعار والضمان' : 'Pricing & SLAs' },
+    { id: 'Security & IP', label: language === 'ar' ? 'الملكية والأمان' : 'Security & IP' },
   ];
 
   const getCategoryIcon = (category: string) => {
