@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BlogPost } from '../types';
 import {
   X,
@@ -23,16 +23,34 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
   onClose,
   onSelectCategory,
 }) => {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
   if (!article) return null;
+
+  const handleModalScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const scrollableDistance = target.scrollHeight - target.clientHeight;
+    if (scrollableDistance > 0) {
+      setScrollProgress((target.scrollTop / scrollableDistance) * 100);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div
+        onScroll={handleModalScroll}
         className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6"
         role="dialog"
         aria-modal="true"
         aria-labelledby="article-title"
       >
+        {/* Modal Top Reading Progress Bar */}
+        <div className="sticky -top-6 sm:-top-8 -mx-6 sm:-mx-8 z-30 h-[2.5px] bg-slate-900 overflow-hidden pointer-events-none">
+          <div
+            className="h-full bg-gradient-to-r rtl:bg-gradient-to-l from-blue-600 via-indigo-500 to-cyan-400 shadow-[0_0_8px_rgba(56,189,248,0.7)] transition-all duration-75"
+            style={{ width: `${scrollProgress}%` }}
+          />
+        </div>
         <button
           onClick={onClose}
           className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-white hover:bg-slate-900 transition-all cursor-pointer"

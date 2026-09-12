@@ -13,9 +13,11 @@ import { LiveArchitectureDashboard } from '../components/LiveArchitectureDashboa
 import { InteractiveServiceShowcase } from '../components/InteractiveServiceShowcase';
 import { ModernEcommerceCaseStudy } from '../components/ModernEcommerceCaseStudy';
 import { SuccessStoriesSection } from '../components/SuccessStoriesSection';
-import { TestimonialsSection } from '../components/TestimonialsSection';
+import { TestimonialSection } from '../components/TestimonialSection';
+import { FAQSection } from '../components/FAQSection';
 import { ContactFormSection } from '../components/ContactFormSection';
 import { ScrollReveal } from '../components/ScrollReveal';
+import { ClientTrust } from '../components/ClientTrust';
 import {
   ArrowRight,
   Sparkles,
@@ -225,7 +227,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 2. TRUST / VALUE SECTION */}
+      {/* 2. CLIENT TRUST & SECTOR CAROUSEL */}
+      <ScrollReveal direction="up" delay={100}>
+        <ClientTrust />
+      </ScrollReveal>
+
+      {/* 3. TRUST / VALUE SECTION */}
       <section id="trust-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {data.trustPillars.map((pillar, idx) => (
@@ -730,14 +737,28 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 11. CLIENT TESTIMONIALS & FEEDBACK */}
+      {/* 11. CLIENT TESTIMONIALS & FEEDBACK (FRAMER MOTION CYCLING) */}
       <section id="testimonials-home-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal direction="up">
-          <TestimonialsSection onNavigate={onNavigate} showNotice={true} />
+          <TestimonialSection onNavigate={onNavigate} />
         </ScrollReveal>
       </section>
 
-      {/* 12. BLOG / INSIGHTS PREVIEW */}
+      {/* 12. FREQUENTLY ASKED QUESTIONS (SDLC & PRICING MODELS) */}
+      <section id="home-faq-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ScrollReveal direction="up">
+          <FAQSection
+            onNavigate={onNavigate}
+            onOpenEstimator={onOpenEstimator}
+            badge={t('faq.badge')}
+            title={t('faq.homeTitle')}
+            subtitle={t('faq.homeDesc')}
+            showFocusCards={true}
+          />
+        </ScrollReveal>
+      </section>
+
+      {/* 13. BLOG / INSIGHTS PREVIEW */}
       <section id="insights-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <ScrollReveal direction="up" className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
@@ -802,7 +823,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 13. BOTTOM CONTACT SECTION */}
+      {/* 14. BOTTOM CONTACT SECTION */}
       <section id="home-contact-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal direction="up">
           <ContactFormSection

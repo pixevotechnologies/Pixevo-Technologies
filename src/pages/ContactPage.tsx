@@ -3,6 +3,7 @@ import { PageId, ContactFormData } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { PageHeader } from '../components/PageHeader';
 import { ContactFormSection } from '../components/ContactFormSection';
+import { ScrollReveal, StaggerContainer, StaggerItem } from '../components/ScrollReveal';
 import {
   ChevronDown,
   ChevronUp,
@@ -37,56 +38,57 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
         {/* Main Interactive Contact & Booking Form */}
-        <section id="contact-form-block">
-          <ContactFormSection
-            prefill={prefill}
-            headline={language === 'ar' ? 'ابدأ استشارتك التقنية' : 'Start Your Technical Inquiry'}
-            subheadline={language === 'ar' ? 'املأ النموذج أدناه أو احجز جلسة استكشافية عبر مكالمة فيديو مع قيادتنا الهندسية.' : 'Fill out the form below or book an introductory video discovery call with our engineering leadership.'}
-          />
-        </section>
+        <ScrollReveal direction="up">
+          <section id="contact-form-block">
+            <ContactFormSection
+              prefill={prefill}
+              headline={language === 'ar' ? 'ابدأ استشارتك التقنية' : 'Start Your Technical Inquiry'}
+              subheadline={language === 'ar' ? 'املأ النموذج أدناه أو احجز جلسة استكشافية عبر مكالمة فيديو مع قيادتنا الهندسية.' : 'Fill out the form below or book an introductory video discovery call with our engineering leadership.'}
+            />
+          </section>
+        </ScrollReveal>
 
         {/* Frequently Asked Questions Accordion */}
         <section className="space-y-8 max-w-4xl mx-auto">
-          <div className="text-center space-y-2">
+          <ScrollReveal direction="up" className="text-center space-y-2">
             <span className="text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
               {language === 'ar' ? 'الاستفسارات الشائعة' : 'Common Inquiries'}
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold font-['Outfit'] text-white">
               {language === 'ar' ? 'الأسئلة الشائعة حول التعاون معنا' : 'Frequently Asked Questions About Working With Us'}
             </h2>
-          </div>
+          </ScrollReveal>
 
-          <div className="space-y-3">
+          <StaggerContainer className="space-y-3">
             {data.faqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div
-                  key={idx}
-                  className="rounded-xl bg-slate-900/40 border border-slate-800 overflow-hidden transition-all"
-                >
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full p-5 text-left rtl:text-right flex items-center justify-between gap-4 text-slate-200 hover:text-white transition-colors cursor-pointer"
-                  >
-                    <span className="text-sm sm:text-base font-semibold font-['Outfit']">
-                      {faq.question}
-                    </span>
-                    {isOpen ? (
-                      <ChevronUp className="w-4 h-4 text-blue-400 shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
-                    )}
-                  </button>
+                <StaggerItem key={idx}>
+                  <div className="rounded-xl bg-slate-900/40 border border-slate-800 overflow-hidden transition-all">
+                    <button
+                      onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      className="w-full p-5 text-left rtl:text-right flex items-center justify-between gap-4 text-slate-200 hover:text-white transition-colors cursor-pointer"
+                    >
+                      <span className="text-sm sm:text-base font-semibold font-['Outfit']">
+                        {faq.question}
+                      </span>
+                      {isOpen ? (
+                        <ChevronUp className="w-4 h-4 text-blue-400 shrink-0" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+                      )}
+                    </button>
 
-                  {isOpen && (
-                    <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-400 border-t border-slate-800 leading-relaxed bg-slate-950/40 animate-in fade-in duration-150 text-left rtl:text-right">
-                      {faq.answer}
-                    </div>
-                  )}
-                </div>
+                    {isOpen && (
+                      <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-400 border-t border-slate-800 leading-relaxed bg-slate-950/40 animate-in fade-in duration-150 text-left rtl:text-right">
+                        {faq.answer}
+                      </div>
+                    )}
+                  </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </StaggerContainer>
         </section>
       </div>
     </div>

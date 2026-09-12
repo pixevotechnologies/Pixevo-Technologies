@@ -3,6 +3,7 @@ import { PageId } from '../types';
 import { COMPANY_INFO } from '../data/siteData';
 import { PixevoMark } from './PixevoLogo';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import {
   Menu,
   X,
@@ -14,6 +15,8 @@ import {
   Mail,
   Globe,
   Check,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -31,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const { language, setLanguage, toggleLanguage, t } = useLanguage();
+  const { theme, toggleTheme, isDark } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -158,6 +162,22 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
 
+            {/* Desktop Theme Toggle */}
+            <button
+              id="header-theme-toggle-btn"
+              type="button"
+              onClick={toggleTheme}
+              className="p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-xs"
+              title={isDark ? (t('header.lightMode') || 'Switch to Light Mode') : (t('header.darkMode') || 'Switch to Dark Mode')}
+              aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {isDark ? (
+                <Sun className="w-4 h-4 text-amber-400 hover:text-amber-300 transition-transform duration-200 hover:rotate-45" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-700 hover:text-blue-600 transition-transform duration-200 hover:-rotate-12" />
+              )}
+            </button>
+
             <button
               id="header-estimator-btn"
               onClick={onOpenEstimator}
@@ -184,14 +204,29 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="mobile-quick-lang-toggle"
               onClick={toggleLanguage}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white transition-all cursor-pointer"
               title={language === 'en' ? 'التبديل إلى العربية' : 'Switch to English'}
               aria-label="Switch Language"
             >
-              <Globe className="w-3.5 h-3.5 text-blue-400" />
+              <Globe className="w-3.5 h-3.5 text-blue-500" />
               <span className="font-mono font-semibold text-[11px]">
                 {language === 'en' ? 'عربي' : 'EN'}
               </span>
+            </button>
+
+            {/* Quick Mobile Theme Toggle Button */}
+            <button
+              id="mobile-quick-theme-toggle"
+              onClick={toggleTheme}
+              className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 transition-all cursor-pointer"
+              title={isDark ? (t('header.lightMode') || 'Switch to Light Mode') : (t('header.darkMode') || 'Switch to Dark Mode')}
+              aria-label="Toggle Theme"
+            >
+              {isDark ? (
+                <Sun className="w-4 h-4 text-amber-400" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-700 hover:text-blue-600" />
+              )}
             </button>
 
             <button
@@ -251,6 +286,44 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <span>العربية</span>
                 {language === 'ar' && <Check className="w-3 h-3" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Theme Switcher Bar */}
+          <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              {isDark ? <Moon className="w-4 h-4 text-blue-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
+              <span className="font-medium">{t('header.theme')}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                id="drawer-theme-light"
+                type="button"
+                onClick={() => isDark && toggleTheme()}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  !isDark
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                }`}
+              >
+                <Sun className="w-3.5 h-3.5" />
+                <span>{t('header.lightMode')}</span>
+                {!isDark && <Check className="w-3 h-3" />}
+              </button>
+              <button
+                id="drawer-theme-dark"
+                type="button"
+                onClick={() => !isDark && toggleTheme()}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  isDark
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                }`}
+              >
+                <Moon className="w-3.5 h-3.5" />
+                <span>{t('header.darkMode')}</span>
+                {isDark && <Check className="w-3 h-3" />}
               </button>
             </div>
           </div>

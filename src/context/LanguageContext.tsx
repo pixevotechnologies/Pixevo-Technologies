@@ -11,6 +11,9 @@ import {
   CORE_VALUES,
   FAQS_DATA,
   TESTIMONIALS_DATA,
+  PORTFOLIO_DATA,
+  CAREERS_DATA,
+  BLOG_POSTS,
 } from '../data/siteData';
 import {
   COMPANY_INFO_AR,
@@ -24,6 +27,9 @@ import {
   CORE_VALUES_AR,
   FAQS_DATA_AR,
   TESTIMONIALS_DATA_AR,
+  PORTFOLIO_DATA_AR,
+  CAREERS_DATA_AR,
+  BLOG_POSTS_AR,
 } from '../data/siteDataAr';
 import {
   ServiceItem,
@@ -32,6 +38,9 @@ import {
   ProcessStep,
   FAQItem,
   TestimonialItem,
+  ProjectItem,
+  JobPosition,
+  BlogPost,
 } from '../types';
 
 export type Language = 'en' | 'ar';
@@ -49,6 +58,9 @@ interface LocalizedData {
   coreValues: typeof CORE_VALUES;
   faqs: FAQItem[];
   testimonials: TestimonialItem[];
+  portfolio: ProjectItem[];
+  careers: JobPosition[];
+  blogPosts: BlogPost[];
 }
 
 interface LanguageContextType {
@@ -71,6 +83,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.estimator': 'Project Estimator',
     'header.interactiveEstimator': 'Interactive Project Estimator',
     'header.language': 'Language',
+    'header.theme': 'Theme',
+    'header.lightMode': 'Light Mode',
+    'header.darkMode': 'Dark Mode',
     'header.en': 'English',
     'header.ar': 'العربية',
     'header.globalRemote': 'Global Remote',
@@ -160,6 +175,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'testimonials.desc':
       'Read what leaders, founders, and CTOs say about working with Pixevo Technologies.',
 
+    // FAQ Section
+    'faq.badge': 'Client Clarity & Insights',
+    'faq.homeTitle': 'Frequently Asked Questions: SDLC & Pricing Models',
+    'faq.homeDesc':
+      'Comprehensive answers to common client questions regarding our agile sprint cadence, quality assurance, scope management, transparent pricing, and milestone disbursements.',
+    'faq.sdlcFocus': 'Software Development Lifecycle (SDLC)',
+    'faq.sdlcFocusDesc':
+      'Two-week agile sprints, interactive Figma prototypes, staging preview URLs, automated CI/CD, and peer code reviews.',
+    'faq.pricingFocus': 'Pricing & Commercial Models',
+    'faq.pricingFocusDesc':
+      'Fixed-scope milestone contracts, dedicated agile teams, direct cloud vendor billing with 0 markups, and 100% IP transfer.',
+
     // Blog / Insights
     'blog.badge': 'Engineering Insights',
     'blog.title': 'Latest Perspectives on Tech & Software',
@@ -183,6 +210,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.social.subtitle': 'Official Social Channels · Active Weekly',
     'footer.rights': 'All rights reserved.',
     'footer.scrollTop': 'Back to top',
+    'common.backToTop': 'Back to top',
 
     // Common UI
     'common.viewAll': 'View All',
@@ -201,6 +229,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'header.estimator': 'حاسبة التكلفة',
     'header.interactiveEstimator': 'حاسبة المشروع التفاعلية',
     'header.language': 'اللغة',
+    'header.theme': 'المظهر',
+    'header.lightMode': 'الوضع الفاتح',
+    'header.darkMode': 'الوضع الداكن',
     'header.en': 'English',
     'header.ar': 'العربية',
     'header.globalRemote': 'فريق عمل عالمي عن بُعد',
@@ -290,6 +321,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'testimonials.desc':
       'تعرف على تجارب المؤسسين والرؤساء التنفيذيين والتقنيين في العمل مع بيكسيفو للتقنية.',
 
+    // FAQ Section
+    'faq.badge': 'الوضوح والشفافية الهندسية',
+    'faq.homeTitle': 'الأسئلة الشائعة: دورة التطوير (SDLC) ونماذج الأسعار',
+    'faq.homeDesc':
+      'إجابات تفصيلية وشاملة حول دورة حياة تطوير البرمجيات، مسارات الجودة، إدارة التغييرات، شفافية الأسعار، ودفعات المراحل التعاقدية.',
+    'faq.sdlcFocus': 'دورة حياة تطوير البرمجيات (SDLC)',
+    'faq.sdlcFocusDesc':
+      'دورات تطوير رشيقة كل أسبوعين، نماذج Figma تفاعلية، خوادم معاينة تجريبية، نشر تلقائي CI/CD، ومراجعات أكواد صارمة.',
+    'faq.pricingFocus': 'نماذج الأسعار والتعاقد',
+    'faq.pricingFocusDesc':
+      'مشاريع محددة التكلفة، فرق هندسية مخصصة، فوترة سحابية مباشرة دون هوامش خفية، ونقل كامل لملكية الكود بنسبة ١٠٠٪.',
+
     // Blog / Insights
     'blog.badge': 'رؤى تقنية ومقالات',
     'blog.title': 'أحدث المقالات في هندسة البرمجيات والذكاء الاصطناعي',
@@ -313,6 +356,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.social.subtitle': 'قنواتنا الرسمية المعتمدة · تحديثات مستمرة',
     'footer.rights': 'جميع الحقوق محفوظة.',
     'footer.scrollTop': 'العودة للأعلى',
+    'common.backToTop': 'العودة للأعلى',
 
     // Common UI
     'common.viewAll': 'عرض الكل',
@@ -370,6 +414,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     coreValues: (language === 'ar' ? CORE_VALUES_AR : CORE_VALUES) as typeof CORE_VALUES,
     faqs: language === 'ar' ? FAQS_DATA_AR : FAQS_DATA,
     testimonials: language === 'ar' ? TESTIMONIALS_DATA_AR : TESTIMONIALS_DATA,
+    portfolio: language === 'ar' ? PORTFOLIO_DATA_AR : PORTFOLIO_DATA,
+    careers: language === 'ar' ? CAREERS_DATA_AR : CAREERS_DATA,
+    blogPosts: language === 'ar' ? BLOG_POSTS_AR : BLOG_POSTS,
   };
 
   return (

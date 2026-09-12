@@ -1,13 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { motion, Variants } from 'motion/react';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
   delay?: number; // In milliseconds (e.g. 100, 200)
-  duration?: number; // In milliseconds (default 700)
+  duration?: number; // In milliseconds (default 650)
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
-  threshold?: number; // 0 to 1 (default 0.12)
-  rootMargin?: string; // e.g. "0px 0px -50px 0px"
+  distance?: number;
+  threshold?: number;
+  rootMargin?: string;
   triggerOnce?: boolean; // Default true
   as?: React.ElementType;
   id?: string;
@@ -17,88 +19,162 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   className = '',
   delay = 0,
-  duration = 700,
+  duration = 650,
   direction = 'up',
-  threshold = 0.12,
-  rootMargin = '0px 0px -40px 0px',
+  distance = 24,
   triggerOnce = true,
-  as: Component = 'div',
   id,
 }) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const ref = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    // Graceful fallback for environments without IntersectionObserver
-    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
-      setIsVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (triggerOnce) {
-            observer.unobserve(element);
-          }
-        } else if (!triggerOnce) {
-          setIsVisible(false);
-        }
-      },
-      {
-        threshold,
-        rootMargin,
-      }
-    );
-
-    observer.observe(element);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [threshold, rootMargin, triggerOnce]);
-
-  const getTransformClasses = () => {
-    if (isVisible) {
-      return 'opacity-100 translate-x-0 translate-y-0 scale-100';
-    }
-
+  const getOffset = () => {
     switch (direction) {
       case 'up':
-        return 'opacity-0 translate-y-8';
+        return { y: distance, x: 0 };
       case 'down':
-        return 'opacity-0 -translate-y-8';
+        return { y: -distance, x: 0 };
       case 'left':
-        return 'opacity-0 translate-x-8';
+        return { x: distance, y: 0 };
       case 'right':
-        return 'opacity-0 -translate-x-8';
+        return { x: -distance, y: 0 };
       case 'none':
       default:
-        return 'opacity-0';
+        return { x: 0, y: 0 };
     }
   };
 
-  const dynamicStyle: React.CSSProperties = {
-    transitionDuration: `${duration}ms`,
-    transitionDelay: `${delay}ms`,
-    transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-    willChange: isVisible ? 'auto' : 'transform, opacity',
+  const offset = getOffset();
+
+  return (
+    <motion.div
+      id={id}
+      initial={{
+        opacity: 0,
+        x: offset.x,
+        y: offset.y,
+      }}
+      whileInView={{
+        opacity: 1,
+        x: 0,
+        y: 0,
+      }}
+      viewport={{
+        once: triggerOnce,
+        margin: '-40px',
+      }}
+      transition={{
+        duration: duration / 1000,
+        delay: delay / 1000,
+        ease: [0.22, 1, 0.36, 1], // Smooth cubic-bezier for a high-end feel
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+export const StaggerContainer: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  staggerDelay?: number;
+  delayChildren?: number;
+  id?: string;
+}> = ({ children, className = '', staggerDelay = 0.08, delayChildren = 0.05, id }) => {
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: staggerDelay,
+        delayChildren: delayChildren,
+      },
+    },
   };
 
   return (
-    // @ts-ignore
-    <Component
-      ref={ref}
+    <motion.div
       id={id}
-      style={dynamicStyle}
-      className={`transition-all duration-700 ease-out transform ${getTransformClasses()} ${className}`}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-40px' }}
+      className={className}
     >
       {children}
-    </Component>
+    </motion.div>
+  );
+};
+
+export const StaggerItem: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+  distance?: number;
+  duration?: number;
+}> = ({ children, className = '', direction = 'up', distance = 20, duration = 0.55 }) => {
+  const getOffset = () => {
+    switch (direction) {
+      case 'up':
+        return { y: distance, x: 0 };
+      case 'down':
+        return { y: -distance, x: 0 };
+      case 'left':
+        return { x: distance, y: 0 };
+      case 'right':
+        return { x: -distance, y: 0 };
+      case 'none':
+      default:
+        return { x: 0, y: 0 };
+    }
+  };
+
+  const offset = getOffset();
+
+  const itemVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      x: offset.x,
+      y: offset.y,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: {
+        duration,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+
+  return (
+    <motion.div variants={itemVariants} className={className}>
+      {children}
+    </motion.div>
+  );
+};
+
+export const ScaleReveal: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  duration?: number;
+  id?: string;
+}> = ({ children, className = '', delay = 0, duration = 0.6, id }) => {
+  return (
+    <motion.div
+      id={id}
+      initial={{ opacity: 0, scale: 0.94 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{
+        duration,
+        delay: delay / 1000,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
   );
 };
 

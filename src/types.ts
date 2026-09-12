@@ -48,8 +48,8 @@ export interface IndustryItem {
 export interface ProjectItem {
   id: string;
   name: string;
-  category: 'Web Application' | 'Mobile App' | 'AI & Automation' | 'Enterprise Software' | 'E-commerce';
-  badge: 'Demo Project' | 'Concept' | 'Prototype';
+  category: 'Web Application' | 'Mobile App' | 'AI & Automation' | 'Enterprise Software' | 'E-commerce' | string;
+  badge: 'Demo Project' | 'Concept' | 'Prototype' | string;
   shortDesc: string;
   fullOverview: string;
   challenge: string;
@@ -81,10 +81,10 @@ export interface ProcessStep {
 export interface JobPosition {
   id: string;
   title: string;
-  department: 'Engineering' | 'Design' | 'Product' | 'Cloud & DevOps' | 'AI & Automation';
-  type: 'Full-time' | 'Part-time' | 'Contract' | 'Internship';
-  location: 'Remote' | 'Hybrid' | 'Global Remote';
-  experienceLevel: 'Entry / Intern' | 'Mid-Level' | 'Senior' | 'Lead';
+  department: 'Engineering' | 'Design' | 'Product' | 'Cloud & DevOps' | 'AI & Automation' | string;
+  type: 'Full-time' | 'Part-time' | 'Contract' | 'Internship' | string;
+  location: 'Remote' | 'Hybrid' | 'Global Remote' | string;
+  experienceLevel: 'Entry / Intern' | 'Mid-Level' | 'Senior' | 'Lead' | string;
   description: string;
   responsibilities: string[];
   requirements: string[];
@@ -103,7 +103,8 @@ export interface BlogPost {
     | 'Mobile Apps'
     | 'Business Technology'
     | 'Cybersecurity'
-    | 'Digital Transformation';
+    | 'Digital Transformation'
+    | string;
   readTime: string;
   publishedDate: string;
   author: {

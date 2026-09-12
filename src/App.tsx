@@ -4,14 +4,17 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { PageId, ProjectItem, JobPosition, BlogPost, ContactFormData } from './types';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { ScrollProgressBar } from './components/ScrollProgressBar';
 import { ProjectEstimatorModal } from './components/ProjectEstimatorModal';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { JobApplicationModal } from './components/JobApplicationModal';
 import { ArticleModal } from './components/ArticleModal';
 import { PixevoChatbot } from './components/PixevoChatbot';
+import { BackToTop } from './components/BackToTop';
 
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
@@ -37,7 +40,7 @@ export default function App() {
   // Scroll to top on navigation
   const handleNavigate = (page: PageId) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   // When estimator finishes, navigate to contact with prefill
@@ -93,7 +96,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col font-sans selection:bg-blue-500/30 selection:text-blue-200">
+    <div className="min-h-screen bg-white dark:bg-[#020617] text-slate-800 dark:text-slate-200 flex flex-col font-sans selection:bg-blue-500/30 selection:text-blue-200 transition-colors duration-200">
+      {/* Subtle Horizontal Scroll Progress Bar */}
+      <ScrollProgressBar />
+
       {/* Header */}
       <Header
         currentPage={currentPage}
@@ -102,84 +108,98 @@ export default function App() {
       />
 
       {/* Main Content View Container */}
-      <main id="main-content" className="flex-grow">
-        {currentPage === 'home' && (
-          <HomePage
-            onNavigate={handleNavigate}
-            onOpenEstimator={() => setIsEstimatorOpen(true)}
-            onSelectProject={(project) => setSelectedProject(project)}
-          />
-        )}
+      <main id="main-content" className="flex-grow overflow-hidden">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{
+              duration: 0.28,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="w-full flex-grow flex flex-col"
+          >
+            {currentPage === 'home' && (
+              <HomePage
+                onNavigate={handleNavigate}
+                onOpenEstimator={() => setIsEstimatorOpen(true)}
+                onSelectProject={(project) => setSelectedProject(project)}
+              />
+            )}
 
-        {currentPage === 'about' && (
-          <AboutPage
-            onNavigate={handleNavigate}
-            onOpenEstimator={() => setIsEstimatorOpen(true)}
-          />
-        )}
+            {currentPage === 'about' && (
+              <AboutPage
+                onNavigate={handleNavigate}
+                onOpenEstimator={() => setIsEstimatorOpen(true)}
+              />
+            )}
 
-        {currentPage === 'services' && (
-          <ServicesPage
-            onNavigate={handleNavigate}
-            onInquireService={handleInquireService}
-            onOpenEstimator={() => setIsEstimatorOpen(true)}
-          />
-        )}
+            {currentPage === 'services' && (
+              <ServicesPage
+                onNavigate={handleNavigate}
+                onInquireService={handleInquireService}
+                onOpenEstimator={() => setIsEstimatorOpen(true)}
+              />
+            )}
 
-        {currentPage === 'solutions' && (
-          <SolutionsPage
-            onNavigate={handleNavigate}
-            onInquireSolution={handleInquireSolution}
-          />
-        )}
+            {currentPage === 'solutions' && (
+              <SolutionsPage
+                onNavigate={handleNavigate}
+                onInquireSolution={handleInquireSolution}
+              />
+            )}
 
-        {currentPage === 'industries' && (
-          <IndustriesPage
-            onNavigate={handleNavigate}
-            onInquireIndustry={handleInquireIndustry}
-          />
-        )}
+            {currentPage === 'industries' && (
+              <IndustriesPage
+                onNavigate={handleNavigate}
+                onInquireIndustry={handleInquireIndustry}
+              />
+            )}
 
-        {currentPage === 'portfolio' && (
-          <PortfolioPage
-            onNavigate={handleNavigate}
-            onSelectProject={(project) => setSelectedProject(project)}
-            onOpenEstimator={() => setIsEstimatorOpen(true)}
-          />
-        )}
+            {currentPage === 'portfolio' && (
+              <PortfolioPage
+                onNavigate={handleNavigate}
+                onSelectProject={(project) => setSelectedProject(project)}
+                onOpenEstimator={() => setIsEstimatorOpen(true)}
+              />
+            )}
 
-        {currentPage === 'process' && (
-          <ProcessPage onNavigate={handleNavigate} />
-        )}
+            {currentPage === 'process' && (
+              <ProcessPage onNavigate={handleNavigate} />
+            )}
 
-        {currentPage === 'careers' && (
-          <CareersPage
-            onNavigate={handleNavigate}
-            onApplyJob={(job) => setSelectedJob(job)}
-          />
-        )}
+            {currentPage === 'careers' && (
+              <CareersPage
+                onNavigate={handleNavigate}
+                onApplyJob={(job) => setSelectedJob(job)}
+              />
+            )}
 
-        {currentPage === 'blog' && (
-          <BlogPage
-            onNavigate={handleNavigate}
-            onSelectArticle={(article) => setSelectedArticle(article)}
-          />
-        )}
+            {currentPage === 'blog' && (
+              <BlogPage
+                onNavigate={handleNavigate}
+                onSelectArticle={(article) => setSelectedArticle(article)}
+              />
+            )}
 
-        {currentPage === 'contact' && (
-          <ContactPage
-            onNavigate={handleNavigate}
-            prefill={contactPrefill}
-          />
-        )}
+            {currentPage === 'contact' && (
+              <ContactPage
+                onNavigate={handleNavigate}
+                prefill={contactPrefill}
+              />
+            )}
 
-        {currentPage === 'privacy' && (
-          <PrivacyPolicyPage onNavigate={handleNavigate} />
-        )}
+            {currentPage === 'privacy' && (
+              <PrivacyPolicyPage onNavigate={handleNavigate} />
+            )}
 
-        {currentPage === 'terms' && (
-          <TermsPage onNavigate={handleNavigate} />
-        )}
+            {currentPage === 'terms' && (
+              <TermsPage onNavigate={handleNavigate} />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Footer */}
@@ -217,6 +237,9 @@ export default function App() {
         onOpenEstimator={() => setIsEstimatorOpen(true)}
         onInquireService={handleInquireService}
       />
+
+      {/* Floating Back to Top Button (appears when scrolled > 500px) */}
+      <BackToTop threshold={500} />
     </div>
   );
 }

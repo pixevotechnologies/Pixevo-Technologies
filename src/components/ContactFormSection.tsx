@@ -13,6 +13,7 @@ import {
   MapPin,
   Clock,
   CheckCircle2,
+  AlertCircle,
   Calendar,
   Sparkles,
   ShieldCheck,
@@ -34,6 +35,83 @@ interface ContactFormSectionProps {
   subheadline?: string;
 }
 
+interface FormErrors {
+  fullName?: string;
+  company?: string;
+  email?: string;
+  phone?: string;
+  projectDetails?: string;
+  callDate?: string;
+}
+
+type FormTouched = {
+  [K in keyof FormErrors]?: boolean;
+};
+
+// RFC 5322 compliant regex for reliable business email validation
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PHONE_REGEX = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]{6,}$/;
+
+export const validateContactField = (
+  field: keyof FormErrors,
+  value: string,
+  extraData?: { activeTab?: 'inquiry' | 'call' }
+): string | undefined => {
+  const trimmed = value ? value.trim() : '';
+
+  switch (field) {
+    case 'fullName':
+      if (!trimmed) return 'Full name is required';
+      if (trimmed.length < 2) return 'Full name must be at least 2 characters';
+      return undefined;
+
+    case 'company':
+      if (!trimmed) return 'Company or organization name is required';
+      if (trimmed.length < 2) return 'Company name must be at least 2 characters';
+      return undefined;
+
+    case 'email':
+      if (!trimmed) return 'Business email is required';
+      if (!EMAIL_REGEX.test(trimmed)) {
+        if (!trimmed.includes('@')) {
+          return 'Email must include "@" symbol';
+        }
+        const parts = trimmed.split('@');
+        if (!parts[1] || !parts[1].includes('.')) {
+          return 'Email must include a valid domain (e.g. company.com)';
+        }
+        return 'Please enter a valid email format (e.g. sarah@company.com)';
+      }
+      return undefined;
+
+    case 'phone':
+      if (trimmed && !PHONE_REGEX.test(trimmed)) {
+        return 'Please enter a valid phone number with country/area code or leave blank';
+      }
+      return undefined;
+
+    case 'projectDetails':
+      if (!trimmed) return 'Project requirements and technical scope are required';
+      if (trimmed.length < 20) {
+        return `Please provide a bit more context (${trimmed.length}/20 minimum characters required)`;
+      }
+      return undefined;
+
+    case 'callDate':
+      if (extraData?.activeTab === 'call') {
+        if (!trimmed) return 'Please select a date for your discovery call';
+        const selected = new Date(trimmed + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selected < today) return 'Discovery call date cannot be in the past';
+      }
+      return undefined;
+
+    default:
+      return undefined;
+  }
+};
+
 export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
   prefill,
   headline = 'Start Your Project Inquiry',
@@ -50,13 +128,18 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
     timeline: 'Within 1 - 2 Months',
   });
 
+  const todayStr = new Date().toISOString().split('T')[0];
   const [activeTab, setActiveTab] = useState<'inquiry' | 'call'>('inquiry');
-  const [callDate, setCallDate] = useState<string>('2026-09-01');
+  const [callDate, setCallDate] = useState<string>(todayStr);
   const [callTime, setCallTime] = useState<string>('14:00 UTC');
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [inquiryId, setInquiryId] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Client-side real-time validation state
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<FormTouched>({});
 
   useEffect(() => {
     if (prefill) {
@@ -69,21 +152,88 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
     }
   }, [prefill]);
 
+  const handleBlur = (field: keyof FormErrors) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    let val = '';
+    if (field === 'callDate') val = callDate;
+    else if (field in formData) val = (formData as any)[field] || '';
+
+    const err = validateContactField(field, val, { activeTab });
+    setErrors((prev) => ({ ...prev, [field]: err }));
+  };
+
+  const handleFieldChange = (field: keyof ContactFormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
+    // Instant real-time validation if field has been touched or for email format guidance
+    if (touched[field as keyof FormErrors] || (field === 'email' && value.includes('@'))) {
+      const err = validateContactField(field as keyof FormErrors, value, { activeTab });
+      setErrors((prev) => ({ ...prev, [field]: err }));
+    }
+  };
+
+  const handleCallDateChange = (val: string) => {
+    setCallDate(val);
+    if (touched.callDate) {
+      const err = validateContactField('callDate', val, { activeTab });
+      setErrors((prev) => ({ ...prev, callDate: err }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrorMessage(null);
+
+    // Validate all required fields
+    const newErrors: FormErrors = {
+      fullName: validateContactField('fullName', formData.fullName),
+      company: validateContactField('company', formData.company),
+      email: validateContactField('email', formData.email),
+      phone: validateContactField('phone', formData.phone),
+      projectDetails: validateContactField('projectDetails', formData.projectDetails),
+      callDate: activeTab === 'call' ? validateContactField('callDate', callDate, { activeTab }) : undefined,
+    };
+
+    // Mark all as touched to display errors if any
+    setTouched({
+      fullName: true,
+      company: true,
+      email: true,
+      phone: true,
+      projectDetails: true,
+      callDate: activeTab === 'call',
+    });
+
+    const errorKeys = (Object.keys(newErrors) as (keyof FormErrors)[]).filter(
+      (key) => newErrors[key] !== undefined
+    );
+
+    if (errorKeys.length > 0) {
+      setErrors(newErrors);
+      setErrorMessage(
+        'Please review and complete all required fields with valid details before submitting.'
+      );
+      const firstInvalid = errorKeys[0];
+      const targetInput = document.getElementById(`contact-${firstInvalid}`);
+      if (targetInput) {
+        targetInput.focus();
+        targetInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const payload = {
         type: activeTab,
-        fullName: formData.fullName,
-        email: formData.email,
-        company: formData.company,
-        phone: formData.phone,
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        company: formData.company.trim(),
+        phone: formData.phone.trim(),
         serviceRequired: formData.serviceRequired,
         budget: formData.budget,
-        projectDetails: formData.projectDetails,
+        projectDetails: formData.projectDetails.trim(),
         timeline: formData.timeline,
         callDate: activeTab === 'call' ? callDate : undefined,
         callTime: activeTab === 'call' ? callTime : undefined,
@@ -308,6 +458,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
           {/* Mode Switcher: Written Inquiry vs Book Discovery Call */}
           <div className="flex items-center gap-2 pb-5 border-b border-slate-800 mb-5">
             <button
+              type="button"
               onClick={() => setActiveTab('inquiry')}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'inquiry'
@@ -320,6 +471,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('call')}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'call'
@@ -429,38 +581,57 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4">
               {errorMessage && (
-                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2">
-                  <Mail className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>{errorMessage}</span>
+                <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-2.5 animate-fadeIn">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
+                  <span className="font-medium">{errorMessage}</span>
                 </div>
               )}
+
               {activeTab === 'call' && (
-                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3 mb-4">
-                  <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider block">
-                    Discovery Call Schedule Slot
-                  </span>
+                <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 mb-4 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block">
+                      Discovery Call Schedule Slot
+                    </span>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                      30-Min Technical Video Session
+                    </span>
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">
-                        Preferred Date
+                      <label htmlFor="contact-callDate" className="block text-[11px] font-semibold text-slate-700 dark:text-slate-400 mb-1">
+                        Preferred Date <span className="text-blue-500">*</span>
                       </label>
                       <input
+                        id="contact-callDate"
                         type="date"
+                        min={todayStr}
                         value={callDate}
-                        onChange={(e) => setCallDate(e.target.value)}
-                        className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-white"
+                        onChange={(e) => handleCallDateChange(e.target.value)}
+                        onBlur={() => handleBlur('callDate')}
+                        className={`w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-950 rounded-lg text-slate-900 dark:text-white transition-all focus:outline-none ${
+                          touched.callDate && errors.callDate
+                            ? 'border border-rose-400 dark:border-rose-500/80 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/15'
+                            : 'border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                        }`}
                       />
+                      {touched.callDate && errors.callDate && (
+                        <p className="text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-1 font-medium">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.callDate}
+                        </p>
+                      )}
                     </div>
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">
+                      <label htmlFor="contact-callTime" className="block text-[11px] font-semibold text-slate-700 dark:text-slate-400 mb-1">
                         Preferred Time Slot (UTC)
                       </label>
                       <select
+                        id="contact-callTime"
                         value={callTime}
                         onChange={(e) => setCallTime(e.target.value)}
-                        className="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-white"
+                        className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                       >
                         <option value="10:00 UTC">10:00 AM UTC (Morning)</option>
                         <option value="14:00 UTC">02:00 PM UTC (Afternoon)</option>
@@ -475,84 +646,196 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
               {/* Name & Company */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Full Name <span className="text-blue-400">*</span>
+                  <label htmlFor="contact-fullName" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1.5">
+                    Full Name <span className="text-blue-500 dark:text-blue-400">*</span>
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.fullName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, fullName: e.target.value })
-                    }
-                    placeholder="e.g. Sarah Jenkins"
-                    className="w-full px-3.5 py-2.5 text-sm bg-slate-900 border border-slate-800 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
-                  />
+                  <div className="relative">
+                    <input
+                      id="contact-fullName"
+                      name="fullName"
+                      type="text"
+                      required
+                      value={formData.fullName}
+                      onChange={(e) => handleFieldChange('fullName', e.target.value)}
+                      onBlur={() => handleBlur('fullName')}
+                      placeholder="e.g. Sarah Jenkins"
+                      aria-invalid={touched.fullName && !!errors.fullName}
+                      aria-describedby={touched.fullName && errors.fullName ? "fullName-error" : undefined}
+                      className={`w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all focus:outline-none pr-9 ${
+                        touched.fullName && errors.fullName
+                          ? 'border border-rose-400 dark:border-rose-500/80 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/15'
+                          : touched.fullName && !errors.fullName && formData.fullName.trim()
+                          ? 'border border-emerald-400 dark:border-emerald-500/80 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15'
+                          : 'border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                      }`}
+                    />
+                    {touched.fullName && errors.fullName && (
+                      <AlertCircle className="w-4 h-4 text-rose-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                    {touched.fullName && !errors.fullName && formData.fullName.trim() && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                  </div>
+                  {touched.fullName && errors.fullName && (
+                    <p id="fullName-error" className="text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-1.5 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.fullName}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Company / Organization <span className="text-blue-400">*</span>
+                  <label htmlFor="contact-company" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1.5">
+                    Company / Organization <span className="text-blue-500 dark:text-blue-400">*</span>
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.company}
-                    onChange={(e) =>
-                      setFormData({ ...formData, company: e.target.value })
-                    }
-                    placeholder="e.g. Apex Dynamics Ltd."
-                    className="w-full px-3.5 py-2.5 text-sm bg-slate-900 border border-slate-800 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
-                  />
+                  <div className="relative">
+                    <input
+                      id="contact-company"
+                      name="company"
+                      type="text"
+                      required
+                      value={formData.company}
+                      onChange={(e) => handleFieldChange('company', e.target.value)}
+                      onBlur={() => handleBlur('company')}
+                      placeholder="e.g. Apex Dynamics Ltd."
+                      aria-invalid={touched.company && !!errors.company}
+                      aria-describedby={touched.company && errors.company ? "company-error" : undefined}
+                      className={`w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all focus:outline-none pr-9 ${
+                        touched.company && errors.company
+                          ? 'border border-rose-400 dark:border-rose-500/80 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/15'
+                          : touched.company && !errors.company && formData.company.trim()
+                          ? 'border border-emerald-400 dark:border-emerald-500/80 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15'
+                          : 'border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                      }`}
+                    />
+                    {touched.company && errors.company && (
+                      <AlertCircle className="w-4 h-4 text-rose-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                    {touched.company && !errors.company && formData.company.trim() && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                  </div>
+                  {touched.company && errors.company && (
+                    <p id="company-error" className="text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-1.5 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.company}
+                    </p>
+                  )}
                 </div>
               </div>
 
               {/* Email & Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Business Email <span className="text-blue-400">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    placeholder="sarah@apexdynamics.com"
-                    className="w-full px-3.5 py-2.5 text-sm bg-slate-900 border border-slate-800 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
-                  />
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label htmlFor="contact-email" className="block text-xs font-semibold text-slate-800 dark:text-slate-300">
+                      Business Email <span className="text-blue-500 dark:text-blue-400">*</span>
+                    </label>
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                      RFC-verified
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => handleFieldChange('email', e.target.value)}
+                      onBlur={() => handleBlur('email')}
+                      placeholder="sarah@company.com"
+                      aria-invalid={touched.email && !!errors.email}
+                      aria-describedby={touched.email && errors.email ? "email-error" : undefined}
+                      className={`w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all focus:outline-none pr-9 ${
+                        touched.email && errors.email
+                          ? 'border border-rose-400 dark:border-rose-500/80 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/15'
+                          : (touched.email || formData.email.includes('@')) && !errors.email && formData.email.trim()
+                          ? 'border border-emerald-400 dark:border-emerald-500/80 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15'
+                          : 'border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                      }`}
+                    />
+                    {touched.email && errors.email && (
+                      <AlertCircle className="w-4 h-4 text-rose-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                    {(touched.email || formData.email.includes('@')) && !errors.email && formData.email.trim() && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                  </div>
+                  {touched.email && errors.email ? (
+                    <p id="email-error" className="text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-1.5 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
+                    </p>
+                  ) : (touched.email || formData.email.includes('@')) && !errors.email && formData.email.trim() ? (
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-1.5 font-medium">
+                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Valid business email format
+                    </p>
+                  ) : (
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-1">
+                      We'll send project estimates and technical specs here
+                    </span>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Phone / WhatsApp Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    placeholder="+1 (555) 000-0000"
-                    className="w-full px-3.5 py-2.5 text-sm bg-slate-900 border border-slate-800 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
-                  />
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label htmlFor="contact-phone" className="block text-xs font-semibold text-slate-800 dark:text-slate-300">
+                      Phone / WhatsApp Number
+                    </label>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                      Optional
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <input
+                      id="contact-phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleFieldChange('phone', e.target.value)}
+                      onBlur={() => handleBlur('phone')}
+                      placeholder="+1 (555) 000-0000"
+                      aria-invalid={touched.phone && !!errors.phone}
+                      aria-describedby={touched.phone && errors.phone ? "phone-error" : undefined}
+                      className={`w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all focus:outline-none pr-9 ${
+                        touched.phone && errors.phone
+                          ? 'border border-rose-400 dark:border-rose-500/80 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/15'
+                          : touched.phone && !errors.phone && formData.phone.trim()
+                          ? 'border border-emerald-400 dark:border-emerald-500/80 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15'
+                          : 'border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                      }`}
+                    />
+                    {touched.phone && errors.phone && (
+                      <AlertCircle className="w-4 h-4 text-rose-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                    {touched.phone && !errors.phone && formData.phone.trim() && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                  </div>
+                  {touched.phone && errors.phone && (
+                    <p id="phone-error" className="text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1 mt-1.5 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.phone}
+                    </p>
+                  )}
+                  {!errors.phone && (
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-1">
+                      Include country code for direct WhatsApp follow-up
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Service Required & Budget */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Primary Service Required <span className="text-blue-400">*</span>
+                  <label htmlFor="contact-service" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1.5">
+                    Primary Service Required <span className="text-blue-500 dark:text-blue-400">*</span>
                   </label>
                   <select
+                    id="contact-service"
                     value={formData.serviceRequired}
                     onChange={(e) =>
                       setFormData({ ...formData, serviceRequired: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 text-sm bg-slate-900 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                   >
                     {SERVICES_DATA.map((srv) => (
                       <option key={srv.id} value={srv.title}>
@@ -566,15 +849,16 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Estimated Budget Range <span className="text-blue-400">*</span>
+                  <label htmlFor="contact-budget" className="block text-xs font-semibold text-slate-800 dark:text-slate-300 mb-1.5">
+                    Estimated Budget Range <span className="text-blue-500 dark:text-blue-400">*</span>
                   </label>
                   <select
+                    id="contact-budget"
                     value={formData.budget}
                     onChange={(e) =>
                       setFormData({ ...formData, budget: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 text-sm bg-slate-900 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                   >
                     {budgetRanges.map((b) => (
                       <option key={b} value={b}>
@@ -587,31 +871,67 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
 
               {/* Project Details */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Project Scope & Technical Details <span className="text-blue-400">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label htmlFor="contact-projectDetails" className="block text-xs font-semibold text-slate-800 dark:text-slate-300">
+                    Project Scope & Technical Details <span className="text-blue-500 dark:text-blue-400">*</span>
+                  </label>
+                  <span
+                    className={`text-[11px] font-mono font-medium transition-colors ${
+                      formData.projectDetails.trim().length >= 20
+                        ? 'text-emerald-600 dark:text-emerald-400 font-semibold'
+                        : 'text-slate-500 dark:text-slate-400'
+                    }`}
+                  >
+                    {formData.projectDetails.trim().length} / 20 min characters
+                  </span>
+                </div>
                 <textarea
+                  id="contact-projectDetails"
+                  name="projectDetails"
                   required
                   rows={4}
                   value={formData.projectDetails}
-                  onChange={(e) =>
-                    setFormData({ ...formData, projectDetails: e.target.value })
-                  }
-                  placeholder="Describe your project goals, key features, target users, or existing software to integrate..."
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-900 border border-slate-800 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500 font-sans"
+                  onChange={(e) => handleFieldChange('projectDetails', e.target.value)}
+                  onBlur={() => handleBlur('projectDetails')}
+                  placeholder="Describe your project goals, key features, target users, or existing software to integrate (at least 20 characters)..."
+                  aria-invalid={touched.projectDetails && !!errors.projectDetails}
+                  aria-describedby={touched.projectDetails && errors.projectDetails ? "projectDetails-error" : undefined}
+                  className={`w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-900 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all focus:outline-none font-sans ${
+                    touched.projectDetails && errors.projectDetails
+                      ? 'border border-rose-400 dark:border-rose-500/80 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/15'
+                      : touched.projectDetails && !errors.projectDetails && formData.projectDetails.trim().length >= 20
+                      ? 'border border-emerald-400 dark:border-emerald-500/80 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15'
+                      : 'border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15'
+                  }`}
                 />
+                <div className="flex items-center justify-between mt-1">
+                  {touched.projectDetails && errors.projectDetails ? (
+                    <p id="projectDetails-error" className="text-xs text-rose-600 dark:text-rose-400 flex items-center gap-1 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.projectDetails}
+                    </p>
+                  ) : (
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Include target platforms, desired launch window, or technical stack preferences
+                    </span>
+                  )}
+                  {formData.projectDetails.trim().length >= 20 && (
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Sufficient technical detail
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* Submission Row */}
               <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <span className="text-[11px] text-slate-400">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
                   🔒 Information held in strict confidence under mutual NDA.
                 </span>
                 <button
                   type="submit"
                   id="submit-project-inquiry-btn"
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:opacity-60 rounded-full shadow-lg shadow-blue-900/20 transition-all cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:opacity-60 rounded-full shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
                 >
                   {isSubmitting ? (
                     <>

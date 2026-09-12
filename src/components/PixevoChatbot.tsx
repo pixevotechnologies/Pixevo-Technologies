@@ -243,29 +243,29 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
       {isOpen && (
         <div
           id="pixevo-ai-chat-panel"
-          className={`fixed z-50 transition-all duration-200 ease-out flex flex-col bg-[#070D1D]/95 backdrop-blur-xl border border-slate-800 shadow-2xl shadow-black/80 rounded-2xl overflow-hidden ${
+          className={`fixed z-50 transition-all duration-200 ease-out flex flex-col bg-white/95 dark:bg-[#070D1D]/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-300/60 dark:shadow-black/80 rounded-2xl overflow-hidden ${
             isMinimized
               ? 'bottom-6 right-6 w-80 h-14'
               : 'bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100vw-32px)] sm:w-[410px] h-[580px] max-h-[85vh]'
           }`}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-900/80 border-b border-slate-800/80 shrink-0">
+          <div className="flex items-center justify-between px-4 py-3 bg-slate-50/90 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800/80 shrink-0">
             <div className="flex items-center gap-3 min-w-0">
               <div className="relative shrink-0">
                 <PixevoMark size={28} />
-                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 border-2 border-slate-900 rounded-full animate-pulse" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 border-2 border-white dark:border-slate-900 rounded-full animate-pulse" />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 font-['Outfit']">
-                  <span className="text-sm font-bold text-white tracking-tight uppercase">
+                  <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight uppercase">
                     Pixevo AI
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 font-mono font-semibold uppercase">
+                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-600 dark:text-blue-300 font-mono font-semibold uppercase">
                     Architect
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-400 block truncate">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">
                   AI Solutions & Architecture Consultant
                 </span>
               </div>
@@ -275,7 +275,7 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
               <button
                 onClick={handleResetChat}
                 title="Restart conversation"
-                className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                 aria-label="Restart conversation"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -284,11 +284,11 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
               <button
                 onClick={() => setIsMinimized(!isMinimized)}
                 title={isMinimized ? 'Expand' : 'Minimize'}
-                className="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                 aria-label={isMinimized ? 'Expand' : 'Minimize'}
               >
                 {isMinimized ? (
-                  <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                  <Sparkles className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" />
                 ) : (
                   <Minimize2 className="w-3.5 h-3.5" />
                 )}
@@ -297,7 +297,7 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
               <button
                 onClick={() => setIsOpen(false)}
                 title="Close chat"
-                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                 aria-label="Close chat"
               >
                 <X className="w-4 h-4" />
@@ -326,17 +326,17 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
                         className={`max-w-[84%] rounded-2xl px-3.5 py-2.5 relative group ${
                           isUser
                             ? 'bg-blue-600 text-white rounded-br-xs shadow-md shadow-blue-600/20'
-                            : 'bg-slate-900/90 text-slate-200 border border-slate-800 rounded-bl-xs shadow-sm'
+                            : 'bg-slate-100 dark:bg-slate-900/90 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 rounded-bl-xs shadow-xs'
                         }`}
                       >
-                        <div className="prose prose-invert prose-xs max-w-none break-words leading-relaxed space-y-2">
+                        <div className="prose prose-slate dark:prose-invert prose-xs max-w-none break-words leading-relaxed space-y-2">
                           <Markdown
                             components={{
                               p: ({ children }) => <p className="mb-1.5 last:mb-0">{children}</p>,
                               ul: ({ children }) => <ul className="list-disc pl-4 space-y-1 my-1">{children}</ul>,
                               ol: ({ children }) => <ol className="list-decimal pl-4 space-y-1 my-1">{children}</ol>,
-                              li: ({ children }) => <li className="text-slate-300">{children}</li>,
-                              strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                              li: ({ children }) => <li className="text-slate-700 dark:text-slate-300">{children}</li>,
+                              strong: ({ children }) => <strong className="font-semibold text-slate-900 dark:text-white">{children}</strong>,
                               a: ({ href, children }) => (
                                 <a
                                   href={href}
@@ -466,8 +466,8 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
               </div>
 
               {/* Input Form */}
-              <div className="p-3 bg-slate-950 border-t border-slate-800 shrink-0">
-                <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 focus-within:border-blue-500/70 rounded-xl px-3 py-2 transition-colors">
+              <div className="p-3 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 shrink-0">
+                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus-within:border-blue-500/70 rounded-xl px-3 py-2 transition-colors">
                   <input
                     ref={inputRef}
                     type="text"
@@ -476,7 +476,7 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
                     onKeyDown={handleKeyDown}
                     disabled={isLoading}
                     placeholder="Ask about tech stacks, pricing, architectures..."
-                    className="flex-1 bg-transparent text-xs text-white placeholder:text-slate-500 focus:outline-none"
+                    className="flex-1 bg-transparent text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
                   />
                   <button
                     onClick={() => handleSendMessage()}
@@ -484,14 +484,14 @@ export const PixevoChatbot: React.FC<PixevoChatbotProps> = ({
                     className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                       input.trim() && !isLoading
                         ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-md shadow-blue-600/30'
-                        : 'text-slate-600 bg-slate-800/40 cursor-not-allowed'
+                        : 'text-slate-400 dark:text-slate-600 bg-slate-200 dark:bg-slate-800/40 cursor-not-allowed'
                     }`}
                     aria-label="Send message"
                   >
                     <Send className="w-3.5 h-3.5" />
                   </button>
                 </div>
-                <div className="flex items-center justify-between text-[9px] font-mono text-slate-500 mt-1 px-1">
+                <div className="flex items-center justify-between text-[9px] font-mono text-slate-400 dark:text-slate-500 mt-1 px-1">
                   <span>Powered by Gemini AI</span>
                   <span>Pixevo Technologies Architecture Core</span>
                 </div>

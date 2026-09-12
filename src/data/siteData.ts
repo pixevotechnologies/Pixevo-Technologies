@@ -1335,6 +1335,34 @@ export const FAQS_DATA: FAQItem[] = [
       'We enforce industry-standard security best practices including end-to-end data encryption in transit (TLS 1.3) and at rest (AES-256), strict Role-Based Access Control (RBAC), automated dependency vulnerability scanning, rate limiting, and compliance with GDPR/SOC2 security frameworks.',
     category: 'Security & IP',
   },
+  {
+    id: 'faq-11',
+    question: 'How do you handle scope changes or new feature requests during an active sprint?',
+    answer:
+      'In our agile lifecycle, requirements evolve naturally as users provide feedback. For Dedicated Teams, you can reprioritize the backlog at every 2-week sprint boundary with zero penalty. For Fixed-Scope projects, new requests are evaluated via a transparent Change Request (CR) process with an upfront timeline and cost estimate provided before any work begins, keeping the core milestone schedule safe.',
+    category: 'Process',
+  },
+  {
+    id: 'faq-12',
+    question: 'Are there any hidden costs, cloud hosting markups, or recurring licensing fees?',
+    answer:
+      'No. We practice 100% financial transparency. All cloud hosting (AWS, GCP, Supabase, Vercel) and third-party APIs (Stripe, Twilio, Gemini) are set up directly inside your organization’s own cloud accounts so you pay direct vendor rates with zero markup. Pixevo never charges proprietary licensing fees for custom code written for your project.',
+    category: 'Pricing & Support',
+  },
+  {
+    id: 'faq-13',
+    question: 'How do payment milestone disbursements work for fixed-scope projects?',
+    answer:
+      'Fixed-scope projects follow a clear, deliverable-backed payment schedule: 1) 30% initial deposit upon architectural sign-off and project kickoff, 2) 25% upon approval of interactive UI/UX Figma prototypes and database schema design, 3) 25% upon feature delivery on staging preview servers for acceptance testing, and 4) 20% upon final production deployment, code transfer, and handover.',
+    category: 'Pricing & Support',
+  },
+  {
+    id: 'faq-14',
+    question: 'What is your automated QA testing and code review protocol before releases?',
+    answer:
+      'Every code change undergoes mandatory peer review by a senior architect and must pass automated CI/CD pipelines including strict TypeScript compilation, ESLint validation, and automated unit/integration test suites. Before each client sprint review, our dedicated QA team performs responsive cross-device verification and security regression tests on staging environments.',
+    category: 'Development',
+  },
 ];
 
 export const ENGAGEMENT_MODELS = [

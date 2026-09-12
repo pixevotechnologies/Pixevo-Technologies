@@ -112,28 +112,28 @@ export const HeroVisual: React.FC = () => {
   const currentNode = nodes[activeNodeIndex];
 
   return (
-    <div className="relative w-full rounded-2xl bg-slate-900/40 border border-slate-800 shadow-2xl p-4 sm:p-6 lg:p-7 overflow-hidden">
-      {/* Background Grid & Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute -top-10 -right-10 w-48 h-48 bg-indigo-600/10 rounded-full blur-[80px] pointer-events-none" />
+    <div className="relative w-full rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800 shadow-xl p-4 sm:p-6 lg:p-7 overflow-hidden transition-colors">
+      {/* Background Glows */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/5 dark:bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -top-10 -right-10 w-48 h-48 bg-indigo-500/5 dark:bg-indigo-600/10 rounded-full blur-[80px] pointer-events-none" />
 
       {/* Terminal Title Bar */}
-      <div className="relative z-10 flex items-center justify-between pb-4 border-b border-slate-800 mb-5">
+      <div className="relative z-10 flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 mb-5">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block" />
             <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block" />
             <span className="w-3 h-3 rounded-full bg-green-500/80 inline-block" />
           </div>
-          <span className="text-xs font-mono text-slate-300 ml-2 flex items-center gap-2">
+          <span className="text-xs font-mono text-slate-700 dark:text-slate-300 ml-2 flex items-center gap-2">
             <PixevoMark size={16} />
-            <span className="text-slate-400">pixevo-core-architecture-engine.v2.4</span>
+            <span className="text-slate-500 dark:text-slate-400">pixevo-core-architecture-engine.v2.4</span>
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-[11px] font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span>Systems Synchronized</span>
           </span>
         </div>
@@ -153,30 +153,30 @@ export const HeroVisual: React.FC = () => {
                 onClick={() => setActiveNodeIndex(index)}
                 className={`relative group flex flex-col text-left p-3.5 rounded-xl border transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? 'bg-slate-800/90 border-blue-500/70 shadow-lg shadow-blue-900/20 ring-1 ring-blue-500/50'
-                    : 'bg-slate-950/80 hover:bg-slate-800/60 border-slate-800 hover:border-slate-700'
+                    ? 'bg-blue-50/80 border-blue-500 text-slate-900 dark:bg-slate-800/90 dark:border-blue-500/70 dark:text-white shadow-md shadow-blue-500/10 ring-1 ring-blue-500/30'
+                    : 'bg-slate-50/70 hover:bg-slate-100/90 border-slate-200/80 text-slate-700 dark:bg-slate-950/80 dark:hover:bg-slate-800/60 dark:border-slate-800 dark:text-slate-300'
                 }`}
               >
                 {/* Node Active Indicator */}
                 {isSelected && (
-                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-blue-400 ring-4 ring-slate-900" />
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-blue-500 ring-4 ring-white dark:ring-slate-900" />
                 )}
 
                 <div className="flex items-center justify-between mb-2">
                   <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-tr ${node.color} text-slate-950 shadow-sm`}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-tr ${node.color} text-white shadow-xs`}
                   >
                     <Icon className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800">
                     0{index + 1}
                   </span>
                 </div>
 
-                <span className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors truncate">
+                <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors truncate">
                   {node.name}
                 </span>
-                <span className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 truncate">
                   {node.badge}
                 </span>
               </button>
@@ -185,41 +185,41 @@ export const HeroVisual: React.FC = () => {
         </div>
 
         {/* Right: Active Node Detail Inspector & Telemetry */}
-        <div className="lg:col-span-5 bg-slate-950 rounded-xl border border-slate-800 p-4.5 space-y-3.5 shadow-inner">
+        <div className="lg:col-span-5 bg-slate-50/90 dark:bg-slate-950 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4.5 space-y-3.5 shadow-xs dark:shadow-inner">
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono text-blue-400 uppercase tracking-wider">
+                <span className="text-[11px] font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider font-semibold">
                   {currentNode.category}
                 </span>
-                <span className="text-slate-600">•</span>
-                <span className="text-[11px] font-mono text-emerald-400">
+                <span className="text-slate-400 dark:text-slate-600">•</span>
+                <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
                   {currentNode.status}
                 </span>
               </div>
-              <h4 className="text-base font-bold text-white font-['Outfit'] mt-0.5">
+              <h4 className="text-base font-bold text-slate-900 dark:text-white font-['Outfit'] mt-0.5">
                 {currentNode.name}
               </h4>
             </div>
-            <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
+            <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-blue-400">
               <Zap className="w-4 h-4" />
             </div>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             {currentNode.description}
           </p>
 
           {/* Integrated Tech Chips */}
           <div>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block mb-1.5 font-mono">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1.5 font-mono">
               Core Technologies
             </span>
             <div className="flex flex-wrap gap-1.5">
               {currentNode.tech.map((t) => (
                 <span
                   key={t}
-                  className="px-2 py-0.5 text-[11px] font-mono text-slate-200 bg-slate-900 border border-slate-800 rounded-md"
+                  className="px-2 py-0.5 text-[11px] font-mono text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-md shadow-2xs"
                 >
                   {t}
                 </span>
@@ -228,32 +228,32 @@ export const HeroVisual: React.FC = () => {
           </div>
 
           {/* Live Simulated Telemetry Stream */}
-          <div className="pt-2 border-t border-slate-800 space-y-1.5">
+          <div className="pt-2 border-t border-slate-200/80 dark:border-slate-800 space-y-1.5">
             <div className="flex items-center justify-between text-[11px] font-mono">
-              <span className="text-slate-400">Pipeline Protocol</span>
-              <span className="text-blue-400">gRPC / TypeScript Async</span>
+              <span className="text-slate-500 dark:text-slate-400">Pipeline Protocol</span>
+              <span className="text-blue-600 dark:text-blue-400 font-medium">gRPC / TypeScript Async</span>
             </div>
             <div className="flex items-center justify-between text-[11px] font-mono">
-              <span className="text-slate-400">Security Standard</span>
-              <span className="text-emerald-400">TLS 1.3 / OAuth2 / RBAC</span>
+              <span className="text-slate-500 dark:text-slate-400">Security Standard</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-medium">TLS 1.3 / OAuth2 / RBAC</span>
             </div>
             <div className="flex items-center justify-between text-[11px] font-mono">
-              <span className="text-slate-400">Integration Reliability</span>
-              <span className="text-indigo-300">Continuous CI / Automated QA</span>
+              <span className="text-slate-500 dark:text-slate-400">Integration Reliability</span>
+              <span className="text-indigo-600 dark:text-indigo-300 font-medium">Continuous CI / Automated QA</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom Architecture Flow Ribbon */}
-      <div className="relative z-10 mt-5 pt-3.5 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 font-mono">
+      <div className="relative z-10 mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400 font-mono">
         <div className="flex items-center gap-2">
-          <Activity className="w-3.5 h-3.5 text-blue-400" />
+          <Activity className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
           <span>Unified Data Pipeline & Synchronized Micro-Services</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-slate-500 hidden sm:inline">Click any node to inspect layer</span>
-          <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px]">
+          <span className="text-slate-400 dark:text-slate-500 hidden sm:inline">Click any node to inspect layer</span>
+          <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20 text-[10px]">
             Production Ready
           </span>
         </div>

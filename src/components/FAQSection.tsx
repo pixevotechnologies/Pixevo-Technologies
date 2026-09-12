@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Mail,
   CheckCircle2,
+  Code2,
 } from 'lucide-react';
 
 interface FAQSectionProps {
@@ -21,7 +22,9 @@ interface FAQSectionProps {
   onOpenEstimator?: () => void;
   title?: string;
   subtitle?: string;
+  badge?: string;
   defaultCategory?: string;
+  showFocusCards?: boolean;
 }
 
 export const FAQSection: React.FC<FAQSectionProps> = ({
@@ -29,7 +32,9 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
   onOpenEstimator,
   title,
   subtitle,
+  badge,
   defaultCategory = 'All',
+  showFocusCards = false,
 }) => {
   const { data, language, t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>(defaultCategory);
@@ -38,17 +43,19 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
 
   const categories = [
     { id: 'All', label: language === 'ar' ? 'الكل' : 'All' },
-    { id: 'Process', label: language === 'ar' ? 'منهجية العمل' : 'Process' },
-    { id: 'Technology', label: language === 'ar' ? 'التقنيات والذكاء الاصطناعي' : 'Technology' },
-    { id: 'Development', label: language === 'ar' ? 'التطوير والهندسة' : 'Development' },
+    { id: 'Process', label: language === 'ar' ? 'دورة التطوير (SDLC)' : 'SDLC & Process' },
+    { id: 'Pricing & Support', label: language === 'ar' ? 'نماذج الأسعار والتعاقد' : 'Pricing Models' },
+    { id: 'Development', label: language === 'ar' ? 'الهندسة وضمان الجودة' : 'Engineering & QA' },
+    { id: 'Technology', label: language === 'ar' ? 'التقنيات والذكاء الاصطناعي' : 'Tech & AI' },
     { id: 'Security & IP', label: language === 'ar' ? 'الأمان وحقوق الملكية' : 'Security & IP' },
-    { id: 'Pricing & Support', label: language === 'ar' ? 'الأسعار والدعم الفني' : 'Pricing & Support' },
   ];
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'Process':
         return Layers;
+      case 'Development':
+        return Code2;
       case 'Technology':
         return Cpu;
       case 'Security & IP':
@@ -62,10 +69,25 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
 
   const currentFaqs = data.faqs;
 
+  const sdlcCount = useMemo(() => {
+    return currentFaqs.filter((f) => f.category === 'Process' || f.category === 'Development').length;
+  }, [currentFaqs]);
+
+  const pricingCount = useMemo(() => {
+    return currentFaqs.filter((f) => f.category === 'Pricing & Support').length;
+  }, [currentFaqs]);
+
   const filteredFaqs = useMemo(() => {
     return currentFaqs.filter((faq) => {
-      const matchesCategory =
-        selectedCategory === 'All' || faq.category === selectedCategory;
+      let matchesCategory = false;
+      if (selectedCategory === 'All') {
+        matchesCategory = true;
+      } else if (selectedCategory === 'SDLC_ALL') {
+        matchesCategory = faq.category === 'Process' || faq.category === 'Development';
+      } else {
+        matchesCategory = faq.category === selectedCategory;
+      }
+
       const matchesSearch =
         searchQuery.trim() === '' ||
         faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -79,6 +101,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
     setExpandedFaqId((prev) => (prev === id ? null : id));
   };
 
+  const displayBadge = badge || (language === 'ar' ? 'دليل المعرفة واستفسارات العملاء' : 'Knowledge & Client Guide');
   const displayTitle = title || (language === 'ar' ? 'الأسئلة الشائعة وإجابات الخبراء' : 'Frequently Asked Questions');
   const displaySubtitle = subtitle || (language === 'ar' ? 'إجابات واضحة ومباشرة على استفسارات العملاء حول منهجية التطوير، حزم التقنيات، الأسعار، وحقوق الملكية.' : 'Clear answers to common questions about our agile engineering process, technology stacks, pricing frameworks, and delivery guarantees.');
 
@@ -88,7 +111,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider font-mono">
           <HelpCircle className="w-3.5 h-3.5" />
-          <span>{language === 'ar' ? 'دليل المعرفة واستفسارات العملاء' : 'Knowledge & Client Guide'}</span>
+          <span>{displayBadge}</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-bold font-['Outfit'] text-white">
           {displayTitle}
@@ -97,6 +120,79 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
           {displaySubtitle}
         </p>
       </div>
+
+      {/* Optional Interactive SDLC & Pricing Focus Cards */}
+      {showFocusCards && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {/* SDLC Focus Card */}
+          <div
+            onClick={() => {
+              setSelectedCategory('Process');
+              setSearchQuery('');
+            }}
+            className={`p-5 rounded-2xl border transition-all cursor-pointer select-none text-left rtl:text-right ${
+              selectedCategory === 'Process' || selectedCategory === 'SDLC_ALL'
+                ? 'bg-blue-950/40 border-blue-500/50 shadow-lg shadow-blue-950/30 ring-1 ring-blue-500/30'
+                : 'bg-slate-900/40 border-slate-800 hover:border-slate-700 hover:bg-slate-900/70'
+            }`}
+          >
+            <div className="flex items-center justify-between gap-2 mb-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
+                  <Layers className="w-4 h-4" />
+                </div>
+                <h3 className="font-bold text-sm text-white font-['Outfit']">
+                  {t('faq.sdlcFocus')}
+                </h3>
+              </div>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                {sdlcCount} {language === 'ar' ? 'أسئلة' : 'Q&As'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed mb-3">
+              {t('faq.sdlcFocusDesc')}
+            </p>
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-blue-400">
+              <span>{language === 'ar' ? 'استعراض أسئلة دورة التطوير' : 'View SDLC Questions'}</span>
+              <ArrowRight className="w-3 h-3 rtl:rotate-180" />
+            </div>
+          </div>
+
+          {/* Pricing Models Focus Card */}
+          <div
+            onClick={() => {
+              setSelectedCategory('Pricing & Support');
+              setSearchQuery('');
+            }}
+            className={`p-5 rounded-2xl border transition-all cursor-pointer select-none text-left rtl:text-right ${
+              selectedCategory === 'Pricing & Support'
+                ? 'bg-emerald-950/40 border-emerald-500/50 shadow-lg shadow-emerald-950/30 ring-1 ring-emerald-500/30'
+                : 'bg-slate-900/40 border-slate-800 hover:border-slate-700 hover:bg-slate-900/70'
+            }`}
+          >
+            <div className="flex items-center justify-between gap-2 mb-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
+                  <CreditCard className="w-4 h-4" />
+                </div>
+                <h3 className="font-bold text-sm text-white font-['Outfit']">
+                  {t('faq.pricingFocus')}
+                </h3>
+              </div>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                {pricingCount} {language === 'ar' ? 'أسئلة' : 'Q&As'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed mb-3">
+              {t('faq.pricingFocusDesc')}
+            </p>
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-400">
+              <span>{language === 'ar' ? 'استعراض أسئلة نماذج الأسعار' : 'View Pricing Questions'}</span>
+              <ArrowRight className="w-3 h-3 rtl:rotate-180" />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Search & Category Filter Controls */}
       <div className="max-w-4xl mx-auto space-y-4">
@@ -107,7 +203,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={language === 'ar' ? 'ابحث في الأسئلة (مثال: الملكية الفكرية، الأسعار، الذكاء الاصطناعي، الضمان)...' : 'Search questions by topic (e.g. Flutter, sprint, pricing, IP ownership, AI)...'}
+            placeholder={language === 'ar' ? 'ابحث في الأسئلة (مثال: المراحل، الأسعار، تغيير النطاق، الضمان، الملكية)...' : 'Search questions by topic (e.g. sprint, scope change, milestone pricing, QA, warranty)...'}
             className="w-full pl-11 pr-4 rtl:pl-4 rtl:pr-11 py-3 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-200 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
           />
           {searchQuery && (
@@ -280,4 +376,5 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
     </section>
   );
 };
+
 
